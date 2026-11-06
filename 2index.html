@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neuroplasticity – How Habits Form in the Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14120f;--panel:#201d1a;--panel2:#2b2621;--line:#423b34;--text:#f1f0ee;--muted:#aea399;
+  --pfc:#4C8DFF;--str:#FFC93C;--hip:#3DDC97;--mot:#FF5A5F;--amy:#B57BFF;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;letter-spacing:-.01em}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 18px 60px}
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+header h1{font-size:clamp(22px,3vw,32px)}
+header p{margin:4px 0 0;color:var(--muted);max-width:640px}
+.hud{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.chip .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.chip .v{font-family:"Space Grotesk";font-size:20px;font-weight:700}
+.chip .v.bump{animation:bump .5s ease}
+@keyframes bump{40%{transform:scale(1.25);color:#8fb6ff}}
+.will{width:220px}
+.bar{height:10px;border-radius:6px;background:#1a1714;overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;border-radius:6px;transition:width .5s ease}
+.will .bar>i{background:linear-gradient(90deg,#4C8DFF,#8fb6ff)}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+@media (max-width:920px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+.card h2{font-size:18px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+#net{width:100%;height:auto;display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.node{cursor:grab;touch-action:none}
+.node:active{cursor:grabbing}
+.nlabel{font:600 13px Inter,sans-serif;fill:#f1f0ee;pointer-events:none;paint-order:stroke;stroke:#14120f;stroke-width:4px}
+.nrole{font:500 10.5px Inter,sans-serif;fill:#aea399;pointer-events:none;paint-order:stroke;stroke:#14120f;stroke-width:3px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
+.lg{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border-radius:12px;padding:9px 10px;font-size:12.5px;color:var(--muted)}
+.lg b{color:var(--text);display:block;font-size:13px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;margin-top:4px;box-shadow:0 0 10px currentColor}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{font:600 14px Inter,sans-serif;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;transition:transform .1s,border-color .2s,background .2s}
+button:hover{border-color:#655a4f;background:#35302a}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:#d9692b;border-color:#f08a4b;color:#1a1410}
+
+button.primary:hover{background:#ec7a39}
+
+.acts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (max-width:560px){.acts{grid-template-columns:repeat(3,1fr)}}
+.act{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:14px;position:relative}
+.act .em{font-size:24px;line-height:1.2;transition:transform .2s}
+.act:not(:disabled):hover .em{transform:scale(1.18) rotate(-6deg)}
+.act .nm{font-size:12.5px;text-align:center;line-height:1.2}
+.act .cost{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap}
+.act.done::after{content:"✓";position:absolute;top:4px;right:8px;color:#3DDC97;font-size:13px}
+.act.active{outline:2px solid var(--c);box-shadow:0 0 18px -6px var(--c)}
+#stage{width:100%;height:auto;display:block;background:radial-gradient(ellipse at 50% 30%,#35302a,#1f1c18 70%);border-radius:14px;border:1px solid var(--line);overflow:hidden}
+.caption{font-size:13px;color:var(--muted);margin:8px 2px 12px;min-height:20px}
+.info h3{font-size:16px;margin:2px 0 8px}
+.info ul{margin:0;padding-left:0;list-style:none}
+.info li{position:relative;padding-left:18px;margin:6px 0;font-size:13.5px}
+.info li::before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border-radius:50%;background:var(--c,#aea399)}
+.habitnote{margin-top:10px;background:var(--panel2);border-left:3px solid var(--c,#4C8DFF);padding:9px 12px;border-radius:8px;font-size:13px}
+.chem{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chem span{font-size:11.5px;padding:3px 9px;border-radius:20px;background:#35302a;border:1px solid var(--line);color:#dcd8d3}
+.control{margin-top:12px;font-size:12px;color:var(--muted)}
+.control .bar{height:14px;display:flex}
+.control .bar i{border-radius:0}
+.control .ends{display:flex;justify-content:space-between;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-weight:600;color:var(--muted);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:6px 6px;border-bottom:1px solid var(--line)}
+td{padding:8px 6px;border-bottom:1px solid #332e28;vertical-align:middle}
+td .bar{height:8px;min-width:90px}
+.tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;background:#35302a;color:var(--muted)}
+.tag.auto{background:#173c2f;color:#7ff0c0}
+#chart{width:100%;height:260px;display:block}
+.bottom{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:920px){.bottom{grid-template-columns:1fr}}
+.learn{margin-top:16px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+.step{background:var(--panel2);border-radius:14px;padding:12px 14px;font-size:13.5px;color:#dcd8d3}
+.step h3{font-size:15px;color:var(--text);margin-bottom:4px}
+.step .n{font-family:"Space Grotesk";font-weight:700;color:#f08a4b;font-size:13px}
+.foot{color:var(--muted);font-size:12px;margin-top:14px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;background:#38322c;border:1px solid #655a4f;color:var(--text);padding:12px 16px;border-radius:14px;max-width:min(560px,92vw);font-size:14px;box-shadow:0 10px 40px #0008;transition:all .35s ease;z-index:10;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* stage */
+.fig{stroke:#f1f0ee;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.float{animation:floatup 2.2s ease-out infinite;opacity:0}
+@keyframes floatup{0%{opacity:0;transform:translateY(8px)}20%{opacity:1}100%{opacity:0;transform:translateY(-38px)}}
+.twinkle{animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.15}}
+.hud .chip{min-width:84px}
+.time .bar>i{background:linear-gradient(90deg,#3DDC97,#9af0c9)}
+.goals{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 16px;background:linear-gradient(90deg,#302b2699,#201d1a);border:1px solid var(--line);border-radius:16px;padding:12px 16px}
+.goals .gt{font-family:"Space Grotesk";font-weight:700;font-size:15px;margin-right:6px}
+.gchip{font-size:12.5px;padding:5px 10px;border-radius:20px;background:#35302a;color:#dcd8d3;border:1px solid var(--line);transition:all .3s}
+.gchip.ok{background:#173c2f;border-color:#2c6b52;color:#8ff3c6}
+.gchip.bad{background:#3d1a22;border-color:#6b2c3a;color:#ffb0bb}
+select{font:500 12px Inter,sans-serif;background:#1e1a17;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:4px 6px;max-width:130px}
+.event{margin:0 0 10px;padding:8px 12px;border-radius:10px;font-size:13px;background:#36302b;border:1px solid #5e544a;display:none;animation:pop .3s ease}
+#modal{position:fixed;inset:0;background:#0b0a09cc;display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+#modal.show{display:flex}
+.mbox{background:var(--panel);border:1px solid #655a4f;border-radius:20px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 60px #000a;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.mbox h2{font-size:22px;margin-bottom:6px}
+.mbox p{color:#dcd8d3;font-size:14px;margin:6px 0}
+.mbox .stars{font-size:34px;letter-spacing:4px;margin:6px 0}
+.mbox .btnrow button{flex:1}
+.mbox ul{padding-left:18px;color:#dcd8d3;font-size:13.5px;margin:6px 0}
+.phone-shake{animation:shake .5s ease infinite;display:inline-block}
+@keyframes shake{20%{transform:rotate(-12deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(6deg)}}
+.quiz{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:10px}
+.q{background:var(--panel2);border-radius:14px;padding:12px 14px}
+.q h3{font-size:14.5px;margin-bottom:8px;font-family:Inter;font-weight:600}
+.q button{display:block;width:100%;text-align:left;margin:5px 0;font-weight:500;font-size:13px;padding:8px 10px}
+.q button.right{background:#173c2f;border-color:#2c8a63}
+.q button.wrong{background:#3d1a22;border-color:#8a2c3e}
+.q .fb{font-size:12.5px;color:var(--muted);margin-top:6px;min-height:18px}
+#score{font-family:"Space Grotesk";font-weight:700;color:var(--hip)}
+.grid>.card,.bottom>.card{min-width:0}
+.edgehit{stroke:transparent;stroke-width:20;cursor:pointer;pointer-events:stroke;fill:none}
+.tablewrap{overflow-x:auto}
+.loop{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 12px}
+@media (max-width:560px){.loop{grid-template-columns:repeat(2,1fr)}}
+.ls{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12.5px;color:#dcd8d3;transition:all .3s;position:relative;overflow:hidden}
+.ls b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.ls .rg{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.ls.on{border-color:var(--c);box-shadow:0 0 18px -4px var(--c);transform:translateY(-2px);background:#37322c}
+.ls.on::after{content:"";position:absolute;left:0;bottom:0;height:3px;background:var(--c);animation:fill var(--d,600ms) linear forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+#dopa{width:100%;height:150px;display:block}
+.matrix{border-collapse:separate;border-spacing:3px;width:100%;table-layout:fixed}
+.matrix td,.matrix th{border:none;padding:0;text-align:center;font-size:11px}
+.matrix th{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600;padding:2px}
+.matrix td{height:38px;border-radius:8px;cursor:pointer;font-weight:600;color:#f1f0ee;transition:outline .2s,background .6s}
+.matrix td.diag{background:#1a1714;cursor:default;color:#5a5046}
+.matrix td.sel{outline:2px solid #fff}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:12px}
+.metric{background:var(--panel2);border-radius:12px;padding:9px 11px;font-size:12px;color:var(--muted)}
+.metric .v{font-family:"Space Grotesk";font-weight:700;font-size:17px;color:var(--text);display:block}
+#syn{width:100%;height:auto;display:block;background:radial-gradient(ellipse at 50% 50%,#312c2699,#1f1c18);border-radius:14px;border:1px solid var(--line)}
+.rec.pop{transform-box:fill-box;transform-origin:center;animation:recpop 1.1s ease}
+@keyframes recpop{0%{transform:scale(0);fill:#fff}60%{transform:scale(1.5);fill:#fff}}
+.synsteps{margin:8px 0 0;padding-left:20px;font-size:12.5px;color:#dcd8d3}
+.synsteps li{margin:3px 0}
+.scale{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.sc{background:var(--panel2);border-radius:14px;padding:12px;font-size:12.5px;color:#dcd8d3}
+.sc .big{font-family:"Space Grotesk";font-weight:700;font-size:20px;color:var(--text)}
+.sc .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sc.you{border:1px solid #d9692b}
+.sources{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.7}
+.sources a{color:#8fb6ff}
+.phase{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.ph1{background:#3a2a17;color:#ffd08a}.ph2{background:#39332c;color:#9fc0ff}.ph3{background:#173c2f;color:#8ff3c6}
+/* hooks & motion */
+.kicker{display:inline-flex;align-items:center;gap:6px;font:700 10.5px Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#f08a4b;margin-bottom:4px}
+.kicker::before{content:"";width:18px;height:2px;background:currentColor;border-radius:2px;transition:width .6s .2s ease}
+.reveal .kicker::before{width:0}.reveal.in .kicker::before{width:18px}
+.card h2{position:relative;display:inline-block}
+.card h2 .ic{display:inline-block;margin-right:6px}
+.reveal.in h2 .ic{animation:icpop .7s .15s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes icpop{0%{transform:scale(0) rotate(-30deg)}100%{transform:none}}
+.card h2::after{content:"";position:absolute;left:0;bottom:-3px;height:3px;width:0;border-radius:3px;background:linear-gradient(90deg,#f08a4b,#FFC93C,#3DDC97);transition:width .9s .25s ease}
+.reveal.in h2::after,.card:not(.reveal) h2::after{width:56px}
+.hook{font-size:13.5px;color:#f1f0ee;margin:6px 0 4px;font-weight:600}
+.hook b{color:#FFC93C}
+.reveal{opacity:0;transform:translateY(28px) scale(.985);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.steps .step,.quiz .q,.scale .sc{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease,box-shadow .25s,border-color .25s;transition-delay:calc(var(--i,0)*70ms)}
+.in .steps .step,.in .quiz .q,.in .scale .sc{opacity:1;transform:none}
+.step{border:1px solid transparent;position:relative;overflow:hidden}
+.step:hover{transform:translateY(-4px)!important;border-color:#655a4f;box-shadow:0 12px 30px -12px #000}
+.step .si{font-size:26px;display:inline-block;margin-bottom:2px;transition:transform .3s}
+.step:hover .si{transform:scale(1.25) rotate(-8deg)}
+.step .teaser{color:#FFC93C;font-weight:600;display:block;margin:2px 0 6px}
+.step::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,#ffffff10 50%,transparent 70%);transform:translateX(-120%);transition:transform .9s}
+.step:hover::before{transform:translateX(120%)}
+.hero h1{background:linear-gradient(90deg,#f1f0ee,#FFC93C,#f08a4b,#B57BFF,#f1f0ee);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+@keyframes shine{to{background-position:300% 0}}
+.hero .typer{font-size:clamp(15px,1.8vw,19px);font-weight:600;color:#f1f0ee;margin:6px 0 2px}
+.hero .typer #tw{color:#FFC93C;border-right:2px solid #FFC93C;padding-right:3px;animation:caret .8s steps(1) infinite}
+@keyframes caret{50%{border-color:transparent}}
+.info li{animation:slidein .45s both;animation-delay:calc(var(--i,0)*110ms)}
+.info h3,.info .habitnote,.info .chem,.info .control{animation:slidein .45s both}
+.info .chem{animation-delay:.35s}.info .habitnote{animation-delay:.45s}.info .control{animation-delay:.55s}
+@keyframes slidein{from{opacity:0;transform:translateX(-14px)}}
+.caption.flash{animation:capflash .6s ease}
+@keyframes capflash{0%{color:#FFC93C;transform:translateY(4px);opacity:.3}100%{transform:none}}
+.sc .big{display:inline-block}
+@media (prefers-reduced-motion:reduce){.float,.twinkle,.phone-shake,.hero h1,.info li,.info *{animation:none!important}.reveal,.steps .step,.quiz .q,.scale .sc{opacity:1;transform:none;transition:none}}
+
+/* louder headings */
+header h1{font-size:clamp(34px,5.6vw,66px)!important;line-height:1.04;letter-spacing:-.035em;font-weight:700;filter:drop-shadow(0 4px 28px #f08a4b40);max-width:900px;margin-bottom:14px}
+.hero .swoosh{position:relative;white-space:nowrap}
+.hero .swoosh::after{content:"";position:absolute;left:0;right:0;bottom:.02em;height:.14em;border-radius:99px;background:linear-gradient(90deg,#FFC93C,#f08a4b,#ff5a5f);transform-origin:left;animation:swoosh 1.1s .5s cubic-bezier(.6,0,.2,1) both,glowp 2.6s 1.6s ease-in-out infinite}
+@keyframes swoosh{from{transform:scaleX(0)}}
+@keyframes glowp{50%{box-shadow:0 0 18px #f08a4b}}
+.hero .kicker{font-size:12px}
+.kicker{background:#f08a4b1f;border:1px solid #f08a4b55;padding:4px 10px 4px 8px;border-radius:99px}
+.kicker::before{display:none}
+.card h2{font-size:clamp(23px,2.7vw,32px);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin:8px 0 6px}
+.learn h2{font-size:clamp(26px,3.2vw,38px)}
+.card h2 .ic{display:inline-grid;place-items:center;width:1.55em;height:1.55em;font-size:.82em;border-radius:14px;margin-right:10px;vertical-align:-.25em;background:linear-gradient(135deg,#f08a4b33,#B57BFF33);border:1px solid #f08a4b66;box-shadow:0 0 22px -4px #f08a4b88}
+.card h2 .ht{background:linear-gradient(90deg,#fff 0%,#FFE0A3 40%,#f08a4b 70%,#fff 100%);background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position 1.4s .2s ease}
+.reveal.in h2 .ht,.card:not(.reveal) h2 .ht{background-position:0 0}
+.card:hover h2 .ht{animation:shine2 2.2s linear infinite}
+@keyframes shine2{to{background-position:-250% 0}}
+.card h2::after{height:4px;bottom:-6px}
+.reveal.in h2::after,.card:not(.reveal) h2::after{width:90px}
+.reveal.in h2{animation:h2in .8s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes h2in{from{opacity:0;transform:translateY(14px) scale(.96);letter-spacing:.02em}}
+.hook{font-size:15px}
+@media (prefers-reduced-motion:reduce){.reveal.in h2,.hero .swoosh::after,.card:hover h2 .ht{animation:none!important}.card h2 .ht{background-position:0 0}}
+
+/* ADHD-friendly: short + collapsible */
+.step{cursor:pointer}
+.step .more{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .35s ease}
+.step.open .more{max-height:420px;opacity:1}
+.step .tap{display:block;font-size:11.5px;color:#aea399;margin-top:4px}
+.step.open .tap{display:none}
+.steps{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+details.more2,details.foot,details.sources{margin-top:8px}
+details summary{cursor:pointer;font-weight:600;color:#f1f0ee;font-size:13px;list-style:none;padding:7px 11px;border-radius:10px;background:#2b2621;border:1px solid #423b34;display:inline-block;transition:background .2s}
+details summary::-webkit-details-marker{display:none}
+details summary:hover{background:#35302a}
+details[open] summary{margin-bottom:6px}
+details[open]>*:not(summary){animation:slidein .35s both}
+.quiz{display:block;max-width:560px}
+.qcard{padding:18px}
+.qcard h3{font-size:17px!important}
+.qcard button[data-o]{font-size:14px!important;padding:11px 12px!important}
+.qprog{height:6px;border-radius:6px;background:#1a1714;overflow:hidden;margin-bottom:8px}
+.qprog i{display:block;height:100%;background:linear-gradient(90deg,#f08a4b,#FFC93C);transition:width .4s}
+.qnum{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#f08a4b;font-weight:700;margin-bottom:4px}
+.qnext{margin-top:10px;width:auto!important;display:inline-block!important}
+.sc{text-align:center}
+.sc .big{display:block}
+#loopName,#synName{display:block;font-size:13px!important;font-family:Inter,sans-serif;margin-top:4px;-webkit-text-fill-color:#aea399}
+
+/* flashcard mode */
+.steps.focus{display:block}
+.steps.focus .step:not(.open){display:none}
+.steps .step.open{max-width:620px;margin:6px auto 0;padding:30px 30px 26px;font-size:16px;line-height:1.6;cursor:default;border-color:#f08a4b88;box-shadow:0 20px 60px -20px #000,0 0 40px -12px #f08a4b66;background:linear-gradient(160deg,#35302a,#2b2621);opacity:1;transform:none;transition:none}
+.step.open .si{font-size:58px;display:block;margin-bottom:6px;animation:icpop .6s .1s cubic-bezier(.3,1.6,.5,1) both}
+.step.open h3{font-size:clamp(21px,2.6vw,27px);line-height:1.2;margin:6px 0 8px}
+.step.open .teaser{font-size:17px}
+.step.open .more{max-height:none;opacity:1;animation:slidein .5s .25s both}
+.step.open.fromR{animation:cardR .45s cubic-bezier(.2,.9,.3,1) both}
+.step.open.fromL{animation:cardL .45s cubic-bezier(.2,.9,.3,1) both}
+@keyframes cardR{from{opacity:0;transform:perspective(900px) translateX(60px) rotateY(-18deg)}}
+@keyframes cardL{from{opacity:0;transform:perspective(900px) translateX(-60px) rotateY(18deg)}}
+.stepnav{display:none;max-width:620px;margin:14px auto 0;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.stepnav.on{display:flex}
+.stepnav #scCount{font-size:13px;color:#aea399;display:flex;align-items:center;gap:10px;min-width:150px;justify-content:center}
+.stepnav .dots{display:flex;gap:4px}
+.stepnav .dots i{width:7px;height:7px;border-radius:50%;background:#423b34;transition:all .3s}
+.stepnav .dots i.seen{background:#7a6d60}
+.stepnav .dots i.on{background:#f08a4b;transform:scale(1.4)}
+.step:not(.open):hover{transform:translateY(-4px) rotate(-.6deg)!important}
+@media (max-width:560px){.stepnav .dots{display:none}}
+
+/* nav */
+#topnav{position:fixed;top:0;left:0;right:0;z-index:15;background:#14120fe6;backdrop-filter:blur(10px);border-bottom:1px solid #423b34;transform:translateY(-110%);transition:transform .35s ease}
+#topnav.on{transform:none}
+.tn-in{max-width:1280px;margin:0 auto;display:flex;gap:4px;align-items:center;padding:6px 14px;overflow-x:auto;scrollbar-width:none}
+.tn-in::-webkit-scrollbar{display:none}
+.tn-in button{background:none;border:1px solid transparent;padding:6px 10px;font-size:13px;white-space:nowrap;border-radius:10px}
+.tn-in button.cur{background:#2b2621;border-color:#655a4f;color:#FFC93C}
+.tn-logo{font-size:20px;margin-right:6px}
+.tn-day{margin-left:auto;font-size:12px;color:#aea399;white-space:nowrap;padding:0 6px}
+#scrollBar{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:linear-gradient(90deg,#f08a4b,#FFC93C,#3DDC97)}
+/* badges */
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 16px}
+.bdg{font-size:12.5px;padding:5px 10px;border-radius:99px;border:1px dashed #423b34;color:#655a4f;background:#1a1714;transition:all .4s}
+.bdg .e{filter:grayscale(1);opacity:.4;margin-right:4px}
+.bdg.got{border-style:solid;border-color:#f08a4b88;color:#f1f0ee;background:#2b2621;box-shadow:0 0 16px -6px #f08a4b}
+.bdg.got .e{filter:none;opacity:1}
+.bdg.new{animation:bdgpop .9s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bdgpop{0%{transform:scale(.4)}60%{transform:scale(1.2)}}
+#toast.badge{background:linear-gradient(135deg,#3a2a17,#2b2621);border-color:#f08a4b;font-weight:600}
+/* plan */
+.plan{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+@media (max-width:820px){.plan{grid-template-columns:1fr}}
+.pf{display:flex;flex-direction:column;gap:10px}
+.pf label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#f1f0ee}
+.pf small{color:#aea399;font-weight:400}
+.pf input,.pf select{font:500 14px Inter,sans-serif;background:#1e1a17;color:#f1f0ee;border:1px solid #423b34;border-radius:10px;padding:9px 11px;max-width:none}
+.pf input:focus,.pf select:focus{outline:2px solid #f08a4b;border-color:transparent}
+.pcard{background:linear-gradient(160deg,#3a2a17,#2b2621);border:1px solid #f08a4b88;border-radius:18px;padding:22px;box-shadow:0 0 40px -14px #f08a4b88;display:flex;flex-direction:column;gap:10px}
+.pcard .big{font-family:"Space Grotesk";font-size:clamp(19px,2.2vw,24px);font-weight:700;line-height:1.3}
+.pcard .big u{text-decoration:none;color:#FFC93C;border-bottom:2px solid #f08a4b88}
+.pcard .tips{font-size:13px;color:#dcd8d3;display:flex;flex-wrap:wrap;gap:6px}
+.pcard .tips span{background:#14120f66;border-radius:99px;padding:3px 10px}
+.pcard .big.pulse{animation:capflash .5s ease}
+</style>
+</head>
+<body>
+<nav id="topnav"><div class="tn-in"><span class="tn-logo">🧠</span>
+  <button data-go="sec-play">🎮 Play</button><button data-go="sec-loop">🔁 Loop</button><button data-go="sec-map">🗺️ Map</button><button data-go="sec-science">🃏 Cards</button><button data-go="sec-plan">🪄 My habit</button><button data-go="sec-quiz">🏁 Quiz</button>
+  <span class="tn-day" id="tnDay"></span><button id="sndBtn" title="Sound on/off">🔇</button></div><i id="scrollBar"></i></nav>
+<div class="wrap">
+  <header>
+    <div class="hero">
+      <div class="kicker">An interactive brain experiment</div>
+      <h1>Your brain is rewiring itself. <span class="swoosh">Right now.</span></h1>
+      <div class="typer">Every time you <span id="tw">scroll</span> – connections in your head get stronger.</div>
+      <p>🧠 Build habits. Beat the phone. 100 days.</p>
+    </div>
+    <div class="hud">
+      <div class="chip"><div class="k">Day</div><div class="v" id="dayV">1</div></div>
+      <div class="chip will" title="Energy is a game simplification – see note at the bottom."><div class="k">Energy <span id="willT"></span></div><div class="bar"><i id="willBar" style="width:100%"></i></div></div>
+      <div class="chip will time"><div class="k">Free time <span id="timeT"></span></div><div class="bar"><i id="timeBar" style="width:100%"></i></div></div>
+    </div>
+  </header>
+
+  <div class="goals reveal" id="goals"></div>
+  <div class="badges reveal" id="badges"></div>
+
+  <div class="grid">
+    <section id="sec-play" class="card reveal">
+      <div class="kicker">Step 1 · Build a brain</div><br><h2><span class="ic">🔌</span><span class="ht">Wire a brain from scratch</span></h2>
+      <p class="hook"><b>Every habit you have lives in wires like these.</b></p>
+      <p class="sub">👉 Drag the neurons into the brain · thicker line = stronger</p>
+      <svg id="net" viewBox="0 0 600 520" aria-label="Neural network">
+        <defs>
+          <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7"/></filter>
+          <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter>
+          <radialGradient id="brainFill" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#3c362f"/><stop offset="1" stop-color="#221e1a"/></radialGradient>
+          <radialGradient id="soma" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g id="brain">
+          <path id="brainShape" d="M92 250 C60 160 130 66 245 58 C300 30 385 38 432 68 C522 88 566 170 548 240 C566 304 524 362 452 372 C420 404 360 408 330 388 C290 412 220 408 190 382 C120 372 84 322 92 250 Z" fill="url(#brainFill)" stroke="#524940" stroke-width="2"/>
+          <path d="M300 64 C292 120 312 170 300 220 C290 270 310 330 300 388" stroke="#474038" stroke-width="2" fill="none" stroke-dasharray="6 8"/>
+          <path d="M160 150 C200 130 230 160 260 140 M350 120 C380 150 420 120 460 150 M150 290 C190 270 220 300 250 280 M360 300 C390 280 430 310 470 290" stroke="#403932" stroke-width="2" fill="none"/>
+          <text x="300" y="30" text-anchor="middle" class="nrole" style="font-size:11px">BRAIN – drop here</text>
+        </g>
+        <line x1="20" y1="436" x2="580" y2="436" stroke="#423b34" stroke-dasharray="4 6"/>
+        <text x="300" y="455" text-anchor="middle" class="nrole">TRAY – drag the neurons up into the brain</text>
+        <g id="edges"></g><g id="pulses"></g><g id="nodes"></g><g id="fx"></g>
+        <g id="night" style="display:none;pointer-events:none">
+          <rect width="600" height="520" fill="#0a0908"/>
+          <g id="nstars"></g>
+          <text x="540" y="70" font-size="34" text-anchor="middle">🌙</text>
+          <text id="nightLbl" x="300" y="480" text-anchor="middle" class="nlabel" style="font-size:14px">💤 Sleep replay: the hippocampus re-runs today’s patterns, several times faster</text>
+        </g>
+      </svg>
+      <div class="btnrow">
+        <button id="placeAll">Place all neurons</button>
+        <button id="resetBtn">Restart</button>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="card reveal">
+      <div class="kicker">Step 2 · Live it</div><br><h2><span class="ic">🎮</span><span class="ht">100 days to rewire one person</span></h2>
+      <p class="hook"><b>Can you beat the phone before day 100?</b></p>
+      <p class="sub">⚡ energy + ⏱ time per activity · new habits = expensive</p>
+      <div class="event" id="event"></div>
+      <svg id="stage" viewBox="0 0 320 200" aria-label="Person">
+        <defs>
+          <radialGradient id="faceGlow"><stop offset="0" stop-color="#7fb2ff" stop-opacity=".55"/><stop offset="1" stop-color="#7fb2ff" stop-opacity="0"/></radialGradient>
+          <radialGradient id="aura"><stop offset="0" stop-color="#4C8DFF" stop-opacity=".35"/><stop offset=".6" stop-color="#B57BFF" stop-opacity=".12"/><stop offset="1" stop-color="#B57BFF" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g id="scene"></g>
+        <g id="mini" transform="translate(4 4) scale(.8)"></g>
+      </svg>
+      <div class="caption" id="caption">Ready. 📱 Scrolling is already a habit – everything else is new.</div>
+      <div class="acts" id="acts"></div>
+      <div class="btnrow">
+        <button class="primary" id="nextDay">🌙 Sleep → next day</button>
+        <button id="ff7">⏩ Keep this up for 7 days</button>
+        <button id="ff30">⏩ 30 days</button>
+      </div>
+      <div class="info" id="info" style="margin-top:14px"></div>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <section id="sec-loop" class="card reveal">
+      <div class="kicker">The secret engine</div><br><h2><span class="ic">🔁</span><span class="ht">The 4-step loop that runs your day</span><span id="loopName" style="color:var(--muted);font-weight:500;font-size:14px"></span></h2>
+      <p class="hook"><b>Every habit = the same loop.</b></p><p class="sub">Do an activity → watch the 4 steps light up</p>
+      <div class="loop" id="loop"></div>
+      <h2 style="font-size:15px">⚡ Plot twist: dopamine isn’t about the reward</h2>
+      <canvas id="dopa"></canvas>
+      <p class="sub" id="dopaText" style="margin-top:6px"></p>
+    </section>
+    <section class="card reveal">
+      <div class="kicker">Cheat codes</div><br><h2><span class="ic">🛠️</span><span class="ht">Hack the loop</span></h2>
+      <p class="hook"><b>Willpower is overrated.</b></p>
+      <p class="sub">🔗 cue · 🤏 tiny · 🔥 streak · never miss twice</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Activity</th><th>Automaticity</th><th>Phase</th><th>🔥</th><th>Cue</th><th>Size</th><th>Cost</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+      <div class="btnrow"><button id="phoneAway">📵 Put phone in another room (−4⚡)</button></div>
+      <p class="sub" style="margin-top:6px">Friction beats willpower.</p>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <section id="sec-map" class="card reveal">
+      <div class="kicker">Connectome lab</div><br><h2><span class="ic">🗺️</span><span class="ht">The map of you</span></h2>
+      <p class="hook"><b>Your wiring – changing every day you play.</b></p>
+      <p class="sub">👆 Click a cell to zoom in</p>
+      <table class="matrix" id="matrix"></table>
+      <div class="metrics" id="metrics"></div>
+    </section>
+    <section class="card reveal">
+      <div class="kicker">Zoom 100,000×</div><br><h2><span class="ic">🔬</span><span class="ht">What “stronger” really means</span><span id="synName" style="color:var(--muted);font-weight:500;font-size:14px"></span></h2>
+      <p class="hook"><b>More receptors. More transmitter. Faster wires.</b></p><p class="sub">Stronger = fires more often</p>
+      <svg id="syn" viewBox="0 0 520 250" aria-label="Synapse"></svg>
+      <div class="metrics" id="synStats"></div>
+      <div class="sub" id="synText" style="margin-top:8px"></div>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <section class="card reveal">
+      <div class="kicker">The curve</div><br><h2><span class="ic">📈</span><span class="ht">Why day 1 is hard and day 60 is easy</span></h2>
+      <p class="hook"><b>Fast at first – then autopilot.</b></p>
+      <canvas id="chart"></canvas>
+    </section>
+    <section class="card reveal">
+      <div class="kicker">Reality check</div><br><h2><span class="ic">🤯</span><span class="ht">From worm to human</span></h2>
+      <p class="hook">Your model: 10 connections. <b>Your brain: ~100 trillion.</b></p>
+      
+      <div class="scale">
+        <div class="sc you"><div class="lbl">Your model</div><div class="big">5 regions</div>10 connections</div>
+        <div class="sc"><div class="lbl">Worm · C. elegans · 1986</div><div class="big"><span data-count="302">302</span> neurons</div>First full map · 1986</div>
+        <div class="sc"><div class="lbl">Fruit fly · FlyWire · 2024</div><div class="big"><span data-count="139255">139,255</span> neurons</div>54.5 million synapses</div>
+        <div class="sc"><div class="lbl">Mouse cortex · MICrONS · 2025</div><div class="big">1 mm³</div>Grain of sand · 523 million synapses</div>
+        <div class="sc"><div class="lbl">Human brain</div><div class="big">~<span data-count="86">86</span> billion neurons</div>~100 trillion synapses · not mapped yet</div>
+      </div>
+    </section>
+  </div>
+
+  <section id="sec-science" class="card learn reveal">
+    <div class="kicker">The science</div><br><h2><span class="ic">🧠</span><span class="ht">12 things your brain does that you never noticed</span></h2>
+    <p class="hook"><b>Tap a card → flashcard mode. Swipe or use ← → keys.</b></p>
+    <div class="steps">
+      <div class="step"><span class="si">🔗</span><div class="n">1 · HEBB’S RULE</div><h3>Why doing something twice makes the third time easier</h3><span class="teaser">Neurons that fire together, wire together.</span><div class="more">When two neurons are repeatedly active at the same time, the synapse between them becomes more efficient (long-term potentiation, LTP): more receptors, more neurotransmitter, sometimes new contact points. That’s why the lines get thicker every time you do an activity.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">🛣️</span><div class="n">2 · MYELIN</div><h3>Your nerves are getting a highway upgrade</h3><span class="teaser">Signals can speed up to over 100 m/s.</span><div class="more">Frequently used nerve pathways get wrapped in more myelin – an insulating layer. The signal then jumps from gap to gap (the “nodes of Ranvier”) instead of crawling along – faster and more reliable. You can watch it jump in the synapse zoom.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">🤖</span><div class="n">3 · THE HANDOVER</div><h3>The day your brain stops asking for permission</h3><span class="teaser">From boss to autopilot.</span><div class="more">New behavior is controlled consciously by the prefrontal cortex – which is effortful. With every repetition the striatum (basal ganglia) takes over more. In the end a single cue is enough and the routine runs almost by itself.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">🔁</span><div class="n">4 · THE LOOP</div><h3>The loop hiding behind every habit you have</h3><span class="teaser">Cue → routine → reward.</span><div class="more">Dopamine tags what was worth it. The faster and more reliably the reward comes, the faster the habit forms. That’s why scrolling becomes a habit so much faster than running. A fixed cue (“after breakfast”) makes the loop reliable.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">😴</span><div class="n">5 · SLEEP</div><h3>You keep learning while you sleep</h3><span class="teaser">Your brain replays your day – in fast-forward.</span><div class="more">During deep sleep the hippocampus “replays” the day’s activity patterns in short, compressed bursts (sharp-wave ripples) and passes them on to the cortex – consolidation. In the game, half of each day’s progress only counts after a good night’s sleep – staying up late costs you.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">📅</span><div class="n">6 · HOW LONG?</div><h3>Forget 21 days. Try 66.</h3><span class="teaser">The famous “21 days” is a myth.</span><div class="more">In a study from University College London (Lally et al., 2009) it took a median of 66 days for a new behavior to become automatic – anywhere from 18 to 254 days depending on the person and the behavior. Missing a single day made hardly any difference.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">👻</span><div class="n">7 · USE IT OR LOSE IT</div><h3>Old habits never really die</h3><span class="teaser">Weaker – but never gone.</span><div class="more">Connections that go unused slowly weaken (synaptic pruning). Old habits rarely disappear completely, though – that’s why relapses are so easy. In the game, a path never drops below 40% of its peak strength.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">✋</span><div class="n">8 · BREAKING A HABIT</div><h3>Every “no” rewires you too</h3><span class="teaser">Resisting is training.</span><div class="more">Every time you notice an urge and don’t follow it, the PFC practices top-down control and the old loop gets a little weaker. It’s hard at first and gets easier – just like building a habit.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">📱</span><div class="n">9 · DOPAMINE MOVES</div><h3>Why just seeing your phone makes you want it</h3><span class="teaser">Dopamine moves from the reward to the cue.</span><div class="more">At first, dopamine neurons fire when the reward arrives. As you learn, the response shifts to the cue that predicts the reward (Schultz’ “reward prediction error”). That’s why just seeing your phone can create craving – before you’ve decided anything.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">🗺️</span><div class="n">10 · CONNECTOME</div><h3>You have a wiring diagram – and it’s changing</h3><span class="teaser">Every habit redraws the map.</span><div class="more">A connectome is a complete map of which neurons connect to which. It doesn’t stay fixed: every habit you build or break slowly reshapes your own connectome. Hubs – regions with many strong links – shape how information flows.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">🧗</span><div class="n">11 · THE 3 PHASES</div><h3>Every habit climbs the same 3 stages</h3><span class="teaser">Initiation → learning → stability.</span><div class="more">Habit researchers describe three phases: deciding to start, repeating it in the same context while automaticity grows, and finally a stable habit that runs with little effort. The table shows which phase each habit is in.</div><span class="tap">Tap to flip 🃏</span></div>
+      <div class="step"><span class="si">🎯</span><div class="n">12 · STRATEGIES</div><h3>4 tricks that beat willpower</h3><span class="teaser">Small, fixed, stacked, friction.</span><div class="more"><b>Start tiny</b> (repetition matters more than size). <b>Use a fixed cue</b> and <b>stack</b> new habits onto old ones. <b>Design your environment</b> (friction for bad habits). <b>Never miss twice.</b> All of these are in the game.</div><span class="tap">Tap to flip 🃏</span></div>
+    </div>
+    <details class="foot"><summary>ℹ️ About the “energy” bar (simplified)</summary> The idea that willpower is a battery that runs empty (“ego depletion”) is debated in psychology – many studies failed to replicate it. What is well established: new behaviors feel effortful because they need conscious control, and habits don’t. The energy bar is a game simplification of that. Likewise, the meditation bonus, the chemistry tags and all learning speeds are simplified. A real brain has around 86 billion neurons; each orb here stands for an entire brain region.</details>
+  </section>
+
+  <section id="sec-plan" class="card learn reveal">
+    <div class="kicker">Your turn</div><br><h2><span class="ic">🪄</span><span class="ht">Build a real habit in 30 seconds</span></h2>
+    <p class="hook"><b>The game is practice. This one is real.</b></p>
+    <div class="plan">
+      <div class="pf">
+        <label>1 · What habit? <select id="pHabit"><option>meditate</option><option>go for a run</option><option>learn 5 new words</option><option>text a friend</option><option>read</option><option value="__">✏️ something else…</option></select></label>
+        <input id="pCustom" placeholder="e.g. stretch" style="display:none">
+        <label>2 · I will… <small>(tiny version, under 2 min)</small><input id="pTiny" value="breathe for 1 minute"></label>
+        <label>3 · After I… <small>(existing habit = cue)</small><input id="pCue" value="pour my morning coffee"></label>
+        <label>4 · Then I reward myself with… <input id="pRew" value="a ✅ on my tracker"></label>
+      </div>
+      <div class="pcard" id="pCard"></div>
+    </div>
+  </section>
+
+  <section id="sec-quiz" class="card learn reveal">
+    <div class="kicker">Final boss</div><br><h2><span class="ic">🏁</span><span class="ht">Prove it: can you get all 12?</span><span id="score"></span></h2>
+    <p class="hook"><b>One question at a time.</b></p>
+    <div class="quiz" id="quiz"></div>
+    <details class="sources"><summary>📚 Sources</summary>
+      Lally et al. (2009), <a href="https://doi.org/10.1002/ejsp.674">How are habits formed</a> ·
+      Gardner, Lally &amp; Wardle (2012), <a href="https://doi.org/10.3399/bjgp12X659466">Making health habitual</a> ·
+      Schultz, Dayan &amp; Montague (1997), <a href="https://doi.org/10.1126/science.275.5306.1593">A neural substrate of prediction and reward</a> ·
+      Amo et al. (2022), <a href="https://doi.org/10.1038/s41593-022-01109-2">A gradual temporal shift of dopamine responses</a> ·
+      FlyWire Consortium (2024), <a href="https://doi.org/10.1038/s41586-024-07558-y">Neuronal wiring diagram of an adult brain</a> ·
+      MICrONS Consortium (2025), <a href="https://doi.org/10.1038/s41586-025-08790-w">Functional connectomics of mouse visual cortex</a>
+    </details>
+  </section>
+</div>
+<div id="toast"></div>
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+
+<script>
+(()=>{
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const el=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+
+const NODES={
+  pfc:{name:'Prefrontal cortex',short:'PFC',color:'#4C8DFF',role:'Planning · Self-control',desc:'The “boss” for conscious decisions. New behavior runs through it at first – and that takes effort.'},
+  str:{name:'Reward system',short:'Striatum',color:'#FFC93C',role:'Dopamine · Autopilot',desc:'Striatum (basal ganglia) with dopamine signals. Learns what pays off and takes over well-practiced routines.'},
+  hip:{name:'Hippocampus',short:'Hippocampus',color:'#3DDC97',role:'Learning · Memory',desc:'Stores new things: vocabulary, routes, experiences. Endurance exercise promotes new connections here.'},
+  mot:{name:'Motor cortex',short:'Motor',color:'#FF5A5F',role:'Movement',desc:'Plans and controls movement – from running strides to your thumb while scrolling.'},
+  amy:{name:'Amygdala',short:'Amygdala',color:'#B57BFF',role:'Emotion · Stress · Social',desc:'Evaluates feelings, danger and social signals. Gets calmed down by the PFC.'}
+};
+const ORDER=['pfc','str','hip','mot','amy'];
+const HOME={pfc:{x:170,y:150},mot:{x:440,y:130},str:{x:300,y:250},amy:{x:180,y:330},hip:{x:430,y:335}};
+const TRAY_Y=490, DROP_LIMIT=430;
+const trayPos=i=>({x:75+i*112,y:TRAY_Y});
+
+const ACTS={
+  laufen:{label:'Go running',emoji:'🏃',main:'mot',base:45,k:0.022,time:1,
+    path:[['pfc','mot'],['mot','hip'],['hip','str']],
+    chem:['BDNF ↑ (growth factor)','Endocannabinoids','Dopamine – but late'],
+    title:'Running: movement rebuilds the brain',
+    brain:[['pfc','PFC → motor cortex: At first you have to consciously push yourself (“shoes on, out the door!”). That’s the effortful part.'],
+      ['mot','Motor cortex → hippocampus: Endurance exercise raises BDNF, a growth factor that acts like fertilizer for synapses – especially in the hippocampus. Watch the green BDNF particles in the animation.'],
+      ['str','Hippocampus → reward system: The run gets linked to the good feeling afterwards (dopamine, endocannabinoids). But the reward comes late – so this habit forms slowly.']],
+    habit:'High effort + late reward: one of the slower habits. Tip: start tiny (5 minutes) and set a fixed cue.'},
+  scrollen:{label:'Scrolling',emoji:'📱',main:'str',base:3,k:0.12,time:0.5,
+    path:[['mot','str'],['str','amy'],['amy','str'],['str','mot']],
+    chem:['Dopamine – unpredictable spikes','Almost no PFC effort'],
+    title:'Scrolling: the fastest loop in the brain',
+    brain:[['mot','Thumb (motor cortex) ↔ reward system: a tiny, super-fast loop.'],
+      ['str','Every new post is a surprise. Unpredictable rewards trigger especially strong dopamine signals – the slot machine principle. In the animation only some swipes hit a “jackpot”.'],
+      ['amy','The amygdala reacts to likes, faces and outrage.'],
+      ['pfc','The PFC is barely involved – that’s why scrolling takes almost no effort and becomes automatic incredibly fast. It also eats your free time (watch the clock).']],
+    habit:'Neuroplasticity is neutral: it strengthens anything that happens often with an instant reward – including habits you never wanted. Watch for phone urges and try resisting them.'},
+  sprache:{label:'Learn a language',emoji:'🗣️',main:'hip',base:40,k:0.018,time:1,
+    path:[['pfc','hip'],['hip','pfc'],['pfc','str']],
+    chem:['Glutamate → LTP','Acetylcholine (attention)','Dopamine for small wins'],
+    title:'Learning a language: working memory at full throttle',
+    brain:[['pfc','PFC ↔ hippocampus: The PFC holds new words in working memory, the hippocampus stores them. Back and forth, over and over.'],
+      ['hip','During sleep the new words get moved into long-term storage (consolidation) – so sleep after studying really matters.'],
+      ['str','PFC → reward system: Small wins (“I understood that!”) release dopamine and tag the learning as worthwhile.']],
+    habit:'The slowest habit in the game because it needs a lot of conscious work. Spaced repetition – a little every day – beats cramming.'},
+  meditieren:{label:'Meditate',emoji:'🧘',main:'pfc',base:30,k:0.025,time:0.5,
+    path:[['pfc','amy'],['amy','pfc'],['pfc','amy']],
+    chem:['PFC top-down control','Calmer stress response'],
+    title:'Meditation: the PFC calms the amygdala',
+    brain:[['pfc','PFC → amygdala: observing feelings instead of reacting right away – the technical term is “top-down regulation”.'],
+      ['amy','Studies of multi-week mindfulness courses found a calmer stress response in the amygdala.'],
+      ['pfc','Every time your mind wanders and you return to your breath, that’s one repetition – the same skill you need to resist an urge. In the animation, watch the thought bubble pop.']],
+    habit:'In the game, a meditation habit makes resisting phone urges cheaper and softens stressful days (simplified).'},
+  freunde:{label:'Meet friends',emoji:'🤝',main:'amy',base:18,k:0.028,time:2,
+    path:[['amy','hip'],['hip','amy'],['amy','str']],
+    chem:['Oxytocin','Dopamine','Endorphins (laughing)'],
+    title:'Meeting friends: the social brain',
+    brain:[['amy','The amygdala reads other people’s faces, voices and emotions.'],
+      ['hip','The hippocampus stores shared experiences – emotional moments are remembered especially well.'],
+      ['str','Closeness and laughter release oxytocin and dopamine – the reward system fires immediately. Social bonds buffer stress.']],
+    habit:'Instant, natural reward → forms fairly easily. The hurdle is time and planning more than effort.'}
+};
+const LOOPS={
+  laufen:[['hip','Shoes by the door, same time each day'],['str','Looking forward to the after-run feeling'],['mot','Run – motor cortex, pushed by the PFC'],['str','Mood boost & endocannabinoids – but only later']],
+  scrollen:[['amy','A buzz, boredom, any idle second'],['str','“What’s new?” – craving the unknown'],['mot','Thumb swipe – takes zero effort'],['str','Unpredictable post or like – a jackpot every few swipes']],
+  sprache:[['hip','A fixed study time and place'],['str','Curiosity – wanting to understand'],['pfc','Practice words – working memory at work'],['str','Small win: “I understood that!”']],
+  meditieren:[['hip','Morning coffee or bedtime'],['amy','Wanting to feel calm'],['pfc','Breathe, notice, return – again and again'],['amy','A calmer, quieter feeling']],
+  freunde:[['amy','A message from a friend'],['str','Wanting connection'],['pfc','Plan and meet up'],['str','Laughter, closeness, oxytocin']]
+};
+const LOOP_NAMES=['Cue','Craving','Routine','Reward'];
+const ACT_IDS=Object.keys(ACTS), GOOD=['laufen','sprache','meditieren','freunde'];
+const CUES=['','After breakfast','After school/work','Before dinner','Before bed'];
+const W0=0.12, LR=0.045, FREE=5, MAX_LATE=2, GOAL_DAY=100, WIN_A=0.8, SCROLL_MAX=0.5;
+const ekey=(a,b)=>ORDER.indexOf(a)<ORDER.indexOf(b)?a+'|'+b:b+'|'+a;
+const SCROLL_EDGES=[ekey('mot','str'),ekey('str','amy')];
+
+let S, GEN=0;
+function fresh(){
+  const pos={},placed={};
+  ORDER.forEach((id,i)=>{pos[id]=trayPos(i);placed[id]=false;});
+  const w={},peak={};
+  for(let i=0;i<ORDER.length;i++)for(let j=i+1;j<ORDER.length;j++){const k=ekey(ORDER[i],ORDER[j]);w[k]=W0;peak[k]=W0;}
+  SCROLL_EDGES.forEach(k=>{w[k]=0.42;peak[k]=0.42;});
+  const habits={};
+  ACT_IDS.forEach(id=>habits[id]={A:0,peak:0,reps:0,done:0,pending:0,cue:'',tiny:false,streak:0,miss:0,hist:[0]});
+  habits.scrollen.A=0.35;habits.scrollen.peak=0.35;habits.scrollen.hist=[0.35];
+  return {day:1,energy:100,maxEnergy:100,time:FREE,pos,placed,w,peak,habits,usedToday:new Set(),today:[],lastDay:[],
+    current:null,busy:false,w0:{...w},selEdge:null,phoneAway:false,phoneAwayLast:false,glow:{},urges:0,resisted:0,gaveIn:0,
+    stress:false,event:null,won:false,phoneAwayCount:0,ended:false,wonDay:null,modal:false,volScroll:false,lastVol:false,sleep:null};
+}
+S=fresh();
+
+/* ================= Network SVG ================= */
+const svg=$('net'), gE=$('edges'), gN=$('nodes'), gP=$('pulses'), gFx=$('fx');
+const defs=svg.querySelector('defs'), brainShape=$('brainShape');
+const edgeEls={}, nodeEls={}, DP={};
+function buildEdges(){
+  gE.innerHTML='';
+  for(const k in S.w){
+    const [a,b]=k.split('|');
+    let grad=document.getElementById('g-'+a+'-'+b);
+    if(!grad){
+      grad=el('linearGradient',{id:'g-'+a+'-'+b,gradientUnits:'userSpaceOnUse'},defs);
+      el('stop',{offset:'0','stop-color':NODES[a].color},grad);
+      el('stop',{offset:'1','stop-color':NODES[b].color},grad);
+    }
+    const g=el('g',{},gE);
+    const glow=el('path',{fill:'none',stroke:'url(#g-'+a+'-'+b+')','stroke-linecap':'round',filter:'url(#soft)',opacity:0},g);
+    const line=el('path',{fill:'none',stroke:'url(#g-'+a+'-'+b+')','stroke-linecap':'round'},g);
+    const t=el('title',{},line);
+    const hit=el('path',{class:'edgehit'},g); hit.addEventListener('click',()=>selectEdge(k,true));
+    const curv=((k.charCodeAt(0)+k.charCodeAt(k.length-1))%2?1:-1)*0.12;
+    edgeEls[k]={g,glow,line,grad,t,a,b,hit,flash:0,curv,c:{x:0,y:0},vis:false};
+  }
+}
+function buildNodes(){
+  gN.innerHTML='';
+  ORDER.forEach((id,idx)=>{
+    const n=NODES[id];
+    const g=el('g',{class:'node'},gN);
+    const halo=el('circle',{r:34,fill:n.color,opacity:.25,filter:'url(#glow)'},g);
+    const dend=el('g',{},g);
+    for(let i=0;i<7;i++){
+      const ang=i/7*Math.PI*2+0.3, L=31+(i%2)*5;
+      const x2=Math.cos(ang)*L,y2=Math.sin(ang)*L;
+      el('path',{d:`M${Math.cos(ang)*16} ${Math.sin(ang)*16} Q${Math.cos(ang+.25)*24} ${Math.sin(ang+.25)*24} ${x2} ${y2}`,stroke:n.color,'stroke-width':2.5,fill:'none','stroke-linecap':'round',opacity:.85},dend);
+      // small branch tips
+      const bx=Math.cos(ang+.35)*(L+4), by=Math.sin(ang+.35)*(L+4);
+      el('path',{d:`M${x2*.85} ${y2*.85} L${bx} ${by}`,stroke:n.color,'stroke-width':1.5,fill:'none','stroke-linecap':'round',opacity:.6},dend);
+    }
+    const body=el('circle',{r:20,fill:n.color},g);
+    el('circle',{r:20,fill:'url(#soma)'},g);
+    el('circle',{r:6,fill:'#14120f',opacity:.35,cx:2,cy:2},g);
+    const hub=el('text',{y:-42,'text-anchor':'middle',class:'nrole',style:'fill:#ffd36b;font-weight:700;font-size:11px'},g); hub.textContent='★ HUB';
+    const lab=el('text',{y:48,'text-anchor':'middle',class:'nlabel'},g);
+    const role=el('text',{y:62,'text-anchor':'middle',class:'nrole'},g);role.textContent=n.role;
+    nodeEls[id]={g,halo,lab,role,hub,dend,body,dir:idx%2?1:-1};
+    g.addEventListener('pointerdown',e=>startDrag(e,id));
+    g.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});
+  });
+}
+const nstars=$('nstars');
+for(let i=0;i<40;i++){el('circle',{cx:(i*137.5)%600,cy:(i*71.3)%420+10,r:(i%3)*0.6+0.6,fill:'#cfe0ff',class:'twinkle',style:`animation-delay:${(i*0.37)%2.4}s`},nstars);}
+
+function svgPt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+function inBrain(x,y){
+  const pts=[[x,y],[x-22,y],[x+22,y],[x,y-22],[x,y+22]];
+  try{ if(brainShape.isPointInFill) return pts.every(([px,py])=>brainShape.isPointInFill(new DOMPoint(px,py))); }catch(e){}
+  return pts.every(([px,py])=>((px-322)/220)**2+((py-225)/165)**2<=1);
+}
+let drag=null;
+function startDrag(e,id){
+  if(e.button>0)return;
+  e.preventDefault();
+  const G=nodeEls[id].g;
+  gN.appendChild(G);          // bring to front BEFORE listening (re-appending would break pointer capture)
+  const p=svgPt(e);
+  drag={id,dx:S.pos[id].x-p.x,dy:S.pos[id].y-p.y};
+  const mv=ev=>{if(!drag)return;const q=svgPt(ev);S.pos[id]={x:clamp(q.x+drag.dx,30,570),y:clamp(q.y+drag.dy,30,500)};};
+  const up=()=>{
+    window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);
+    drag=null;
+    const wasPlaced=S.placed[id];
+    if(S.pos[id].y<DROP_LIMIT){
+      const p=S.pos[id]; let n=0;
+      while(!inBrain(p.x,p.y)&&n<40){p.x+=(322-p.x)*0.1;p.y+=(225-p.y)*0.1;n++;}   // snap inside the brain outline
+      S.placed[id]=true; ripple(id);
+      if(!wasPlaced) toast(`${NODES[id].name} placed – ${NODES[id].desc}`);
+    } else {S.placed[id]=false;S.pos[id]=trayPos(ORDER.indexOf(id));}
+    if(!wasPlaced && allPlaced()) setTimeout(()=>toast('All 5 neurons are in the brain. Now pick an activity! 👉'),1800);
+    renderActs();
+  };
+  window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up);
+}
+const allPlaced=()=>ORDER.every(n=>S.placed[n]);
+
+/* pulses & effects */
+const pulses=[], ripples=[], floats=[];
+function ripple(id,color){ripples.push({id,t0:performance.now(),color});}
+function floatText(x,y,txt,color,size){
+  const t=el('text',{x,y,'text-anchor':'middle','font-size':size||13,'font-weight':700,'font-family':'Space Grotesk',class:'nlabel'},gFx);
+  t.textContent=txt; t.style.fill=color;
+  floats.push({el:t,x,y,t0:performance.now()});
+}
+const pulsePool=[];
+function getPulse(i){
+  if(!pulsePool[i]){
+    const g=el('g',{},gP);
+    const halo=el('circle',{r:12,filter:'url(#glow)'},g);
+    const trail=[];for(let j=0;j<5;j++)trail.push(el('circle',{},g));
+    const c=el('circle',{r:5.5,fill:'#fff'},g);
+    pulsePool[i]={g,halo,c,trail};
+  }
+  return pulsePool[i];
+}
+const ripPool=[];
+function getRip(i){if(!ripPool[i])ripPool[i]=el('circle',{fill:'none'},gFx);return ripPool[i];}
+function edgePt(k,from,u){
+  const E=edgeEls[k], t=from===E.a?u:1-u, A=DP[E.a], B=DP[E.b], C=E.c, m=1-t;
+  return {x:m*m*A.x+2*m*t*C.x+t*t*B.x, y:m*m*A.y+2*m*t*C.y+t*t*B.y};
+}
+function firePath(path,{step=650,stagger=110,count=3,dur=600,alpha=1,color,lrFn,t0}={}){
+  const now=t0||performance.now();
+  path.forEach(([a,b],i)=>{
+    for(let j=0;j<count;j++){
+      pulses.push({k:ekey(a,b),from:a,t0:now+i*step+j*stagger,dur,color:color||NODES[a].color,alpha:typeof alpha==='function'?alpha(a,b):alpha,size:j===0?6:4,
+        onArrive:j===0&&lrFn?()=>lrFn(a,b):null});
+    }
+  });
+}
+
+/* ================= main animation loop ================= */
+let lastNow=performance.now();
+function frame(now){
+  const dt=Math.min(0.05,(now-lastNow)/1000); lastNow=now; const T=now/1000;
+  ORDER.forEach((id,i)=>{
+    const p=S.pos[id];
+    if(S.placed[id]&&!(drag&&drag.id===id)&&!RM) DP[id]={x:p.x+Math.sin(T*0.9+i*1.7)*2.2,y:p.y+Math.cos(T*0.7+i*2.3)*2.2};
+    else DP[id]={x:p.x,y:p.y};
+  });
+  const decay=Math.pow(0.96,dt*60);
+  for(const k in edgeEls){
+    const E=edgeEls[k], a=DP[E.a], b=DP[E.b];
+    E.c={x:(a.x+b.x)/2-(b.y-a.y)*E.curv, y:(a.y+b.y)/2+(b.x-a.x)*E.curv};
+    E.vis=S.placed[E.a]&&S.placed[E.b];
+    E.g.style.display=E.vis?'':'none';
+    if(!E.vis)continue;
+    const w=S.w[k], d=`M${a.x.toFixed(1)} ${a.y.toFixed(1)} Q${E.c.x.toFixed(1)} ${E.c.y.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+    E.line.setAttribute('d',d);E.glow.setAttribute('d',d);E.hit.setAttribute('d',d);
+    E.grad.setAttribute('x1',a.x);E.grad.setAttribute('y1',a.y);E.grad.setAttribute('x2',b.x);E.grad.setAttribute('y2',b.y);
+    const sw=1.2+w*15;
+    E.line.setAttribute('stroke-width',sw.toFixed(2));
+    E.line.setAttribute('opacity',(0.18+0.75*w+E.flash*0.3).toFixed(3));
+    E.glow.setAttribute('stroke-width',(sw+10).toFixed(1));
+    E.glow.setAttribute('opacity',(E.flash*0.7+w*0.15+(S.selEdge===k?0.45+0.15*Math.sin(T*4):0)).toFixed(3));
+    E.flash*=decay;
+    E.t.textContent=`${NODES[E.a].name} ↔ ${NODES[E.b].name}: strength ${Math.round(w*100)}%`;
+    // spontaneous background activity – stronger edges fire more often
+    if(!RM&&!S.sleep&&pulses.length<70&&Math.random()<dt*(0.1+1.3*w*w)){
+      const from=Math.random()<.5?E.a:E.b;
+      pulses.push({k,from,t0:now,dur:900+700*Math.random(),color:NODES[from].color,alpha:0.18+0.3*w,size:2.4,idle:true});
+    }
+  }
+  const hub=hubId();
+  ORDER.forEach(id=>{
+    const N=nodeEls[id], p=DP[id];
+    const gl=S.glow[id]||0;
+    const sc=(S.placed[id]?0.85+0.3*Math.min(1,nodeStrength(id)/2):0.85)*(1+0.14*gl);
+    N.g.setAttribute('transform',`translate(${p.x.toFixed(1)},${p.y.toFixed(1)}) scale(${sc.toFixed(3)})`);
+    if(!RM)N.dend.setAttribute('transform',`rotate(${(T*5*N.dir+gl*8*Math.sin(T*30)).toFixed(2)})`);
+    N.hub.style.display=(S.placed[id]&&hub===id)?'':'none';
+    const inTray=!S.placed[id];
+    N.role.style.display=inTray?'none':'';
+    N.lab.textContent=inTray?NODES[id].short:NODES[id].name;
+    N.halo.setAttribute('opacity',(0.22+gl*0.75+(RM?0:0.05*Math.sin(T*2+ORDER.indexOf(id)))).toFixed(3));
+    N.halo.setAttribute('r',(34+gl*16).toFixed(1));
+    S.glow[id]=gl*decay;
+  });
+  let used=0;
+  for(let i=pulses.length-1;i>=0;i--){
+    const P=pulses[i]; const t=(now-P.t0)/P.dur;
+    if(t<0)continue;
+    if(t>=1){ if(P.onArrive)P.onArrive(); pulses.splice(i,1); continue; }
+    if(!edgeEls[P.k].vis)continue;
+    const e=P.idle?t:ease(t), pos=edgePt(P.k,P.from,e);
+    const g=getPulse(used++);
+    g.g.style.display='';
+    g.c.setAttribute('cx',pos.x);g.c.setAttribute('cy',pos.y);g.c.setAttribute('r',P.size);
+    g.c.setAttribute('opacity',P.alpha);
+    g.halo.style.display=P.idle?'none':'';
+    if(!P.idle){g.halo.setAttribute('cx',pos.x);g.halo.setAttribute('cy',pos.y);g.halo.setAttribute('fill',P.color);g.halo.setAttribute('opacity',P.alpha);}
+    g.trail.forEach((c,j)=>{
+      const q=edgePt(P.k,P.from,Math.max(0,e-(j+1)*(P.idle?0.025:0.04)));
+      c.setAttribute('cx',q.x);c.setAttribute('cy',q.y);c.setAttribute('r',(P.size*(0.85-j*0.14)).toFixed(2));
+      c.setAttribute('fill',P.color);c.setAttribute('opacity',(P.alpha*(0.55-j*0.1)).toFixed(3));
+    });
+  }
+  for(let i=used;i<pulsePool.length;i++)pulsePool[i].g.style.display='none';
+  let ru=0;
+  for(let i=ripples.length-1;i>=0;i--){
+    const R=ripples[i], t=(now-R.t0)/750;
+    if(t>=1){ripples.splice(i,1);continue;}
+    if(t<0)continue;
+    const p=DP[R.id], c=getRip(ru++);
+    c.style.display='';
+    c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',22+t*44);
+    c.setAttribute('stroke',R.color||NODES[R.id].color);c.setAttribute('stroke-width',3*(1-t));c.setAttribute('opacity',1-t);
+  }
+  for(let i=ru;i<ripPool.length;i++)ripPool[i].style.display='none';
+  for(let i=floats.length-1;i>=0;i--){
+    const F=floats[i], t=(now-F.t0)/1400;
+    if(t>=1){F.el.remove();floats.splice(i,1);continue;}
+    F.el.setAttribute('y',F.y-t*30);F.el.setAttribute('opacity',1-t*t);
+  }
+  // night overlay during sleep
+  const night=$('night');
+  if(S.sleep){
+    const f=(now-S.sleep.t0)/S.sleep.dur, op=f<.15?f/.15:f>.85?Math.max(0,(1-f)/.15):1;
+    night.style.display='';night.querySelector('rect').setAttribute('opacity',(0.62*op).toFixed(3));
+    night.style.opacity=op;
+  } else night.style.display='none';
+  try{ const st=Math.max(0,(now-sceneT0)/1000); if(scene) scene.update(scene.ctx,st); updateMini(st); }catch(err){console.error(err);}
+  try{ updateSyn(T); }catch(err){console.error(err);}
+  requestAnimationFrame(frame);
+}
+
+/* ================= Stage: procedural figures ================= */
+const gScene=$('scene'), gMini=$('mini');
+function mkFig(parent,color,o={}){
+  const g=el('g',{},parent);
+  const back=el('path',{class:'fig',style:`stroke:${color}`,opacity:o.flat?1:0.5},g);
+  const front=el('path',{class:'fig',style:`stroke:${color}`},g);
+  const hr=o.hr||13, head=el('circle',{r:hr,fill:color},g);
+  const tl0=o.tl||46, ua=o.ua||22, fa=o.fa||20, th=o.th||27, sh=o.sh||27;
+  const f=p=>p[0].toFixed(1)+' '+p[1].toFixed(1);
+  const limb=(O,a,l1,l2)=>{if(!a)return null;const J=[O[0]+l1*Math.sin(a[0]),O[1]+l1*Math.cos(a[0])];const E=[J[0]+l2*Math.sin(a[0]+a[1]),J[1]+l2*Math.cos(a[0]+a[1])];return {J,E,d:`M${f(O)}L${f(J)}L${f(E)}`};};
+  return {g,head,set(P){
+    const tl=tl0*(P.tlS||1), lean=P.lean||0, neck=P.neck||0, sl=Math.sin(lean), cl=Math.cos(lean);
+    const H=[P.x,P.y], Sh=[P.x+tl*sl,P.y-tl*cl], A=[P.x+(tl-5)*sl,P.y-(tl-5)*cl];
+    const N=[Sh[0]+6*Math.sin(lean+neck),Sh[1]-6*Math.cos(lean+neck)];
+    const C=[Sh[0]+(hr+6)*Math.sin(lean+neck),Sh[1]-(hr+6)*Math.cos(lean+neck)];
+    const aF=limb(A,P.aF,ua,fa),aB=limb(A,P.aB,ua,fa),lF=limb(H,P.lF,th,sh),lB=limb(H,P.lB,th,sh);
+    front.setAttribute('d',`M${f(H)}L${f(Sh)}L${f(N)}`+(aF?aF.d:'')+(lF?lF.d:''));
+    back.setAttribute('d',(aB?aB.d:'')+(lB?lB.d:''));
+    head.setAttribute('cx',C[0].toFixed(1));head.setAttribute('cy',C[1].toFixed(1));
+    return {S:Sh,C,hF:aF&&aF.E,hB:aB&&aB.E,fF:lF&&lF.E};
+  }};
+}
+const txt=(parent,x,y,s,attrs={})=>{const t=el('text',Object.assign({x,y,'font-family':'Inter','text-anchor':'middle'},attrs),parent);t.textContent=s;return t;};
+const hash=n=>(Math.imul(n+1,2654435761)>>>0);
+
+// mini brain (top-left): regions light up in the order the signal travels
+const MINI={};
+function miniXY(id){const p=HOME[id];return {x:12+(p.x-88)/472*66,y:10+(p.y-40)/370*46};}
+(function buildMini(){
+  el('path',{d:'M8 36 C4 18 22 4 44 4 C66 2 86 14 84 34 C86 50 70 62 52 60 C40 66 24 64 18 56 C8 52 6 44 8 36 Z',fill:'#221e1add',stroke:'#655a4f','stroke-width':1.5},gMini);
+  el('path',{d:'M45 6 C43 22 47 40 45 60',stroke:'#474038','stroke-width':1,fill:'none','stroke-dasharray':'2 3'},gMini);
+  MINI.link=el('path',{fill:'none','stroke-width':2,'stroke-linecap':'round',opacity:0},gMini);
+  ORDER.forEach(id=>{const p=miniXY(id);MINI[id]={halo:el('circle',{cx:p.x,cy:p.y,r:7,fill:NODES[id].color,opacity:0,filter:'url(#soft)'},gMini),c:el('circle',{cx:p.x,cy:p.y,r:3,fill:NODES[id].color,opacity:.35},gMini)};});
+  MINI.lbl=txt(gMini,46,76,'brain now',{'font-size':9,fill:'#aea399'});
+})();
+let miniSeq=[];
+function updateMini(t){
+  if(!miniSeq.length){ORDER.forEach(id=>{MINI[id].c.setAttribute('r',3);MINI[id].c.setAttribute('opacity',.35);MINI[id].halo.setAttribute('opacity',0);});MINI.link.setAttribute('opacity',0);return;}
+  const rate=S.sleep?7:2.4, idx=Math.floor(t*rate)%miniSeq.length, fr=(t*rate)%1;
+  const cur=miniSeq[idx], nxt=miniSeq[(idx+1)%miniSeq.length];
+  ORDER.forEach(id=>{
+    const on=id===cur, inSeq=miniSeq.includes(id);
+    MINI[id].c.setAttribute('r',on?4.6+1.2*Math.sin(fr*Math.PI):inSeq?3.4:2.6);
+    MINI[id].c.setAttribute('opacity',on?1:inSeq?.6:.25);
+    MINI[id].halo.setAttribute('opacity',on?(0.9*(1-fr)).toFixed(2):0);
+  });
+  const a=miniXY(cur),b=miniXY(nxt);
+  MINI.link.setAttribute('d',`M${a.x} ${a.y} L${a.x+(b.x-a.x)*fr} ${a.y+(b.y-a.y)*fr}`);
+  MINI.link.setAttribute('stroke',NODES[cur].color);MINI.link.setAttribute('opacity',cur===nxt?0:.8);
+}
+
+const SCENES={
+  idle:{build(g){
+      el('line',{x1:40,y1:174,x2:280,y2:174,stroke:'#423b34','stroke-width':2},g);
+      el('ellipse',{cx:160,cy:175,rx:30,ry:4,fill:'#0007'},g);
+      const f=mkFig(g,'#f1f0ee');
+      txt(g,160,193,'Pick an activity below',{'font-size':12,fill:'#aea399'});
+      const q=txt(g,196,52,'?',{'font-size':18,fill:'#8fb6ff','font-family':'Space Grotesk','font-weight':700});
+      return {f,q};},
+    update(c,t){
+      const b=Math.sin(t*2*Math.PI/3.4);
+      c.f.set({x:160,y:120+b*0.7,lean:0.025*b,neck:0.18*Math.sin(t*0.55),aF:[0.1+0.04*b,0.18],aB:[-0.1-0.04*b,0.12],lF:[0.08,-0.03],lB:[-0.08,0.03]});
+      c.q.setAttribute('opacity',(0.5+0.5*Math.sin(t*1.6)).toFixed(2));
+    }},
+  laufen:{build(g){
+      el('circle',{cx:276,cy:38,r:22,fill:'#ffd36b',opacity:.12},g);el('circle',{cx:276,cy:38,r:11,fill:'#ffd36b',opacity:.75},g);
+      const far=el('g',{},g);
+      for(let i=0;i<3;i++)el('path',{d:`M${i*160} 160 Q${i*160+40} 120 ${i*160+80} 150 Q${i*160+120} 128 ${i*160+160} 160 Z`,fill:'#36302a'},far);
+      const trees=el('g',{},g);
+      for(let i=0;i<5;i++){const x=i*110+20;el('rect',{x:x-2.5,y:140,width:5,height:32,fill:'#4c443c'},trees);el('circle',{cx:x,cy:134,r:15,fill:'#1d4038'},trees);el('circle',{cx:x+7,cy:128,r:9,fill:'#24504a'},trees);}
+      el('line',{x1:0,y1:172,x2:320,y2:172,stroke:'#655a4f','stroke-width':2.5},g);
+      const dash=el('line',{x1:0,y1:184,x2:320,y2:184,stroke:'#4e463d','stroke-width':3,'stroke-dasharray':'16 12'},g);
+      const speed=[];for(let i=0;i<3;i++)speed.push(el('line',{y1:84+i*18,y2:84+i*18,stroke:'#aea399','stroke-width':2.5,'stroke-linecap':'round'},g));
+      const f=mkFig(g,'#f1f0ee');
+      const dots=[];for(let i=0;i<8;i++)dots.push(el('circle',{r:2.6,fill:'#3DDC97'},g));
+      const bl=txt(g,0,0,'BDNF',{'font-size':9,fill:'#3DDC97','font-weight':700});
+      const hr=el('g',{},g); txt(hr,0,4,'♥ 148 bpm',{'font-size':12,fill:'#FF5A5F','font-weight':700});
+      return {far,trees,dash,speed,f,dots,bl,hr};},
+    update(c,t){
+      c.far.setAttribute('transform',`translate(${-(t*14%160)} 0)`);
+      c.trees.setAttribute('transform',`translate(${-(t*75%110)} 0)`);
+      c.dash.setAttribute('stroke-dashoffset',(t*75).toFixed(1));
+      c.speed.forEach((s,i)=>{const f=(t*1.6+i*.33)%1;s.setAttribute('x1',120-f*40);s.setAttribute('x2',138-f*40);s.setAttribute('opacity',(Math.sin(f*Math.PI)*.8).toFixed(2));});
+      const p=t*2*Math.PI*1.45, s=Math.sin(p);
+      const knee=q=>-(0.12+1.35*Math.max(0,Math.cos(q))**1.3);
+      const J=c.f.set({x:150,y:116+4*Math.abs(s),lean:0.2,neck:0.08,
+        lF:[0.62*s,knee(p)],lB:[-0.62*s,knee(p+Math.PI)],
+        aF:[-0.75*s,1.7],aB:[0.75*s,1.7]});
+      const target=(()=>{const m=miniXY('hip');return {x:4+m.x*.8,y:4+m.y*.8};})();
+      c.dots.forEach((d,i)=>{const f=(t*0.55+i/8)%1, sx=J.S[0]-6+(i%3)*6, sy=J.S[1]+20+(i%4)*5;
+        const x=sx+(target.x-sx)*f, y=sy+(target.y-sy)*f-Math.sin(f*Math.PI)*30;
+        d.setAttribute('cx',x.toFixed(1));d.setAttribute('cy',y.toFixed(1));d.setAttribute('opacity',(Math.sin(f*Math.PI)*.9).toFixed(2));
+        if(i===0){c.bl.setAttribute('x',x+14);c.bl.setAttribute('y',y-4);c.bl.setAttribute('opacity',(Math.sin(f*Math.PI)*.9).toFixed(2));}});
+      const beat=1+0.12*Math.max(0,Math.sin(t*2*Math.PI*2.47))**8;
+      c.hr.setAttribute('transform',`translate(206 26) scale(${beat.toFixed(3)})`);
+    }},
+  scrollen:{build(g){
+      const clock=el('g',{transform:'translate(266 50)'},g);
+      el('circle',{r:19,fill:'#23201c',stroke:'#655a4f','stroke-width':2},clock);
+      for(let i=0;i<12;i++){const a=i/12*Math.PI*2;el('line',{x1:Math.sin(a)*14,y1:-Math.cos(a)*14,x2:Math.sin(a)*16.5,y2:-Math.cos(a)*16.5,stroke:'#867869','stroke-width':1.2},clock);}
+      const hh=el('line',{x1:0,y1:0,x2:0,y2:-8,stroke:'#f1f0ee','stroke-width':2.5,'stroke-linecap':'round'},clock);
+      const mh=el('line',{x1:0,y1:0,x2:0,y2:-13,stroke:'#FFC93C','stroke-width':1.8,'stroke-linecap':'round'},clock);
+      txt(g,266,84,'time flies…',{'font-size':9.5,fill:'#aea399'});
+      el('line',{x1:20,y1:170,x2:300,y2:170,stroke:'#423b34','stroke-width':2},g);
+      el('rect',{x:88,y:90,width:24,height:74,rx:9,fill:'#484038'},g);
+      el('rect',{x:88,y:136,width:130,height:26,rx:9,fill:'#584f46'},g);
+      el('rect',{x:204,y:122,width:20,height:40,rx:8,fill:'#484038'},g);
+      el('rect',{x:96,y:162,width:5,height:8,fill:'#342e29'},g);el('rect',{x:210,y:162,width:5,height:8,fill:'#342e29'},g);
+      const glow=el('circle',{r:26,fill:'url(#faceGlow)'},g);
+      const f=mkFig(g,'#f1f0ee');
+      const ph=el('g',{},g);
+      el('rect',{x:-8,y:-28,width:16,height:28,rx:3.5,fill:'#1e1a17',stroke:'#FFC93C','stroke-width':2},ph);
+      const cp=el('clipPath',{id:'phClip'},ph); el('rect',{x:-5.5,y:-25,width:11,height:22,rx:1},cp);
+      const scr=el('g',{'clip-path':'url(#phClip)'},ph);
+      const flash=el('rect',{x:-5.5,y:-25,width:11,height:22,fill:'#fff',opacity:0},scr);
+      const feed=el('g',{},scr);
+      const cols=['#FFC93C','#FF5A5F','#B57BFF'];
+      for(let i=0;i<9;i++){el('rect',{x:-4.5,y:-25+i*12,width:9,height:7,rx:1,fill:cols[i%3],opacity:.85},feed);el('rect',{x:-4.5,y:-25+i*12+8.5,width:9,height:1.6,fill:'#aea399'},feed);}
+      scr.insertBefore(flash,null);
+      const pops=[];for(let i=0;i<3;i++)pops.push({t:txt(g,0,0,'',{'font-size':15}),t0:-9,ch:''});
+      const dp=txt(g,0,0,'+dopamine',{'font-size':10,fill:'#FFC93C','font-weight':700,opacity:0});
+      return {hh,mh,glow,f,ph,feed,flash,pops,dp,last:-1,pi:0,jt:-9};},
+    update(c,t){
+      c.mh.setAttribute('transform',`rotate(${(t*300)%360})`);c.hh.setAttribute('transform',`rotate(${(t*25)%360})`);
+      const per=0.9, idx=Math.floor(t/per), fr=(t%per)/per, sw=fr<0.28?ease(fr/0.28):1;
+      const flick=fr<0.28?0.16*Math.sin(fr/0.28*Math.PI):0;
+      const J=c.f.set({x:132,y:138,lean:-0.12,neck:0.55,lF:[Math.PI/2-0.05,-Math.PI/2+0.05],lB:[Math.PI/2+0.02,-Math.PI/2],aF:[0.5,1.9+flick],aB:[0.35,1.75]});
+      c.ph.setAttribute('transform',`translate(${J.hF[0].toFixed(1)} ${(J.hF[1]+2).toFixed(1)}) rotate(-12)`);
+      c.feed.setAttribute('transform',`translate(0 ${-((idx*12+sw*12)%36).toFixed(2)})`);
+      c.glow.setAttribute('cx',J.C[0]+4);c.glow.setAttribute('cy',J.C[1]+2);
+      c.glow.setAttribute('opacity',(0.7+0.3*Math.sin(t*13)*Math.sin(t*5)).toFixed(2));
+      if(idx!==c.last){c.last=idx;
+        if(hash(idx)%5<2){const P=c.pops[c.pi++%3];P.t0=t;P.ch=['❤️','🔔','😂','🔥','👍'][hash(idx+7)%5];P.t.textContent=P.ch;c.jt=t;}}
+      const jf=(t-c.jt)/0.35; c.flash.setAttribute('opacity',jf>=0&&jf<1?(0.6*(1-jf)).toFixed(2):0);
+      c.pops.forEach((P,i)=>{const f=(t-P.t0)/1.3;if(f<0||f>1){P.t.setAttribute('opacity',0);return;}
+        P.t.setAttribute('x',J.hF[0]+16+i*7);P.t.setAttribute('y',J.hF[1]-24-f*40);P.t.setAttribute('opacity',(1-f*f).toFixed(2));});
+      const df=(t-c.jt)/1.1; c.dp.setAttribute('x',J.hF[0]+44);c.dp.setAttribute('y',J.hF[1]-10-df*16);c.dp.setAttribute('opacity',df>=0&&df<1?(1-df).toFixed(2):0);
+    }},
+  sprache:{build(g){
+      el('line',{x1:20,y1:174,x2:300,y2:174,stroke:'#423b34','stroke-width':2},g);
+      el('rect',{x:104,y:148,width:48,height:6,rx:2,fill:'#655a4f'},g);el('rect',{x:102,y:104,width:6,height:50,rx:2,fill:'#655a4f'},g);
+      el('line',{x1:110,y1:154,x2:110,y2:174,stroke:'#655a4f','stroke-width':3},g);el('line',{x1:148,y1:154,x2:148,y2:174,stroke:'#655a4f','stroke-width':3},g);
+      const f=mkFig(g,'#f1f0ee');
+      el('rect',{x:168,y:126,width:128,height:6,rx:2,fill:'#655a4f'},g);
+      el('rect',{x:176,y:132,width:5,height:42,fill:'#4e463d'},g);el('rect',{x:284,y:132,width:5,height:42,fill:'#4e463d'},g);
+      el('rect',{x:172,y:122,width:34,height:4,rx:1,fill:'#3DDC97',opacity:.85},g);
+      const L='#f1f0ee';
+      el('path',{d:'M222 124 L252 126 L252 112 L222 110 Z',fill:L},g);
+      el('path',{d:'M252 126 L282 124 L282 110 L252 112 Z',fill:'#e1dcd8'},g);
+      for(let i=0;i<3;i++){el('line',{x1:227,y1:114+i*3.3,x2:247,y2:115+i*3.3,stroke:'#aea399','stroke-width':.8},g);el('line',{x1:257,y1:115+i*3.3,x2:277,y2:114+i*3.3,stroke:'#aea399','stroke-width':.8},g);}
+      const page=el('path',{d:'M252 126 L282 124 L282 110 L252 112 Z',fill:'#f8f7f6',stroke:'#aea399','stroke-width':.5},g);
+      const pen=el('line',{stroke:'#FFC93C','stroke-width':2,'stroke-linecap':'round'},g);
+      const bub=el('g',{},g);
+      el('rect',{x:-59,y:-19,width:118,height:38,rx:14,fill:'#38322c',stroke:'#3DDC97','stroke-width':2},bub);
+      el('path',{d:'M-40 17 L-56 30 L-28 18',fill:'#38322c',stroke:'#3DDC97','stroke-width':2,'stroke-linejoin':'round'},bub);
+      el('rect',{x:-44,y:12,width:20,height:6,fill:'#38322c'},bub);
+      const word=txt(bub,0,6,'Hello!',{'font-size':17,fill:'#f1f0ee','font-family':'Space Grotesk','font-weight':700});
+      [['Ж',196,112,0],['é',214,104,.8],['ñ',232,98,1.5]].forEach(([s,x,y,d])=>txt(g,x,y,s,{'font-size':14,fill:'#3DDC97',class:'float',style:`animation-delay:${d}s`,'font-family':'Space Grotesk'}));
+      return {f,page,pen,bub,word,wi:-1};},
+    update(c,t){
+      const wr=Math.sin(t*15)*0.07, nod=0.05*Math.sin(t*1.3);
+      const J=c.f.set({x:132,y:146,lean:0.28,neck:0.3+nod,lF:[Math.PI/2,-Math.PI/2],lB:[Math.PI/2-0.08,-Math.PI/2+0.08],aF:[0.55,1.15+wr],aB:[0.85,0.95]});
+      const h=J.hF; c.pen.setAttribute('x1',h[0]);c.pen.setAttribute('y1',h[1]);c.pen.setAttribute('x2',h[0]+5);c.pen.setAttribute('y2',h[1]+6);
+      const cyc=3.2, fp=(t%cyc)/cyc, sx=fp<0.25?Math.cos(ease(fp/0.25)*Math.PI):1;
+      c.page.setAttribute('transform',`translate(252 0) scale(${sx.toFixed(3)} 1) translate(-252 0)`);
+      c.page.setAttribute('fill',sx<0?'#ebe8e6':'#f8f7f6');
+      const words=['Hello!','Привет!','Hola!','Bonjour!','Ciao!','Merhaba!','Olá!','こんにちは'];
+      const wi=Math.floor(t/1.3)%words.length; if(wi!==c.wi){c.wi=wi;c.word.textContent=words[wi];}
+      const pf=(t%1.3)/1.3, sc=pf<0.15?0.8+0.2*ease(pf/0.15)+0.08*Math.sin(pf/0.15*Math.PI):1;
+      c.bub.setAttribute('transform',`translate(239 37) scale(${sc.toFixed(3)})`);
+    }},
+  meditieren:{build(g){
+      const aura=el('ellipse',{cx:160,cy:110,rx:70,ry:70,fill:'url(#aura)'},g);
+      const rings=[0,1,2].map(i=>el('circle',{cx:160,cy:108,fill:'none',stroke:i===2?'#B57BFF':'#4C8DFF','stroke-width':2},g));
+      el('ellipse',{cx:160,cy:156,rx:52,ry:9,fill:'#38322c'},g);
+      const f=mkFig(g,'#f1f0ee',{flat:true});
+      el('path',{class:'fig',d:'M120 148 Q160 128 200 148 M124 150 Q160 166 196 150'},g);
+      const flashH=el('circle',{r:20,fill:'#4C8DFF',opacity:0,filter:'url(#soft)'},g);
+      const tb=el('g',{opacity:0},g);
+      el('circle',{cx:-26,cy:30,r:3,fill:'#38322c',stroke:'#aea399'},tb);el('circle',{cx:-17,cy:20,r:5,fill:'#38322c',stroke:'#aea399'},tb);
+      el('ellipse',{cx:4,cy:0,rx:22,ry:16,fill:'#38322c',stroke:'#aea399','stroke-width':1.5},tb);
+      const te=txt(tb,4,6,'📱',{'font-size':15});
+      const back=txt(g,198,22,'↩ noticed → back to the breath (+1 rep)',{'font-size':11,fill:'#8fb6ff','font-weight':600,opacity:0});
+      const bt=txt(g,160,190,'breathe in …',{'font-size':13,fill:'#8fb6ff'});
+      return {aura,rings,f,flashH,tb,te,back,bt,lastCyc:-1};},
+    update(c,t){
+      const br=Math.sin((t%8)/8*2*Math.PI-Math.PI/2)*0.5+0.5; // 0 → 1 → 0 over 8s
+      const J=c.f.set({x:160,y:140,tlS:1+0.035*br,neck:0.04*Math.sin(t*0.4),aF:[0.85+0.03*br,-0.35],aB:[-0.85-0.03*br,0.35]});
+      c.bt.textContent=(t%8)<4?'breathe in …':'breathe out …';
+      c.aura.setAttribute('rx',(62+14*br).toFixed(1));c.aura.setAttribute('ry',(62+14*br).toFixed(1));
+      c.rings.forEach((r,i)=>{const f=((t+i*2.67)%8)/8;r.setAttribute('r',(30+70*f).toFixed(1));r.setAttribute('opacity',(0.55*(1-f)).toFixed(2));});
+      const cyc=10, ct=t%cyc, n=Math.floor(t/cyc);
+      if(n!==c.lastCyc){c.lastCyc=n;c.te.textContent=['📱','📝','🍕','📅','💭'][n%5];}
+      let o=0,s=1;
+      if(ct>4.5&&ct<7.5){o=Math.min(1,(ct-4.5)/0.6);s=0.6+0.4*Math.min(1,(ct-4.5)/0.6);}
+      else if(ct>=7.5&&ct<7.9){const f=(ct-7.5)/0.4;o=1-f;s=1+0.6*f;}
+      c.tb.setAttribute('opacity',o.toFixed(2));
+      c.tb.setAttribute('transform',`translate(${J.C[0]+44} ${J.C[1]-30-(ct>4.5?(ct-4.5)*2:0)}) scale(${s.toFixed(2)})`);
+      const bf=ct>=7.5&&ct<9.6?1-(ct-7.5)/2.1:0;
+      c.back.setAttribute('opacity',bf.toFixed(2));
+      c.flashH.setAttribute('cx',J.C[0]);c.flashH.setAttribute('cy',J.C[1]);c.flashH.setAttribute('opacity',(bf*0.8).toFixed(2));
+    }},
+  freunde:{build(g){
+      el('line',{x1:20,y1:174,x2:300,y2:174,stroke:'#423b34','stroke-width':2},g);
+      const cols=['#ffb3c1','#f1f0ee','#9fd8ff'], xs=[86,160,234];
+      const figs=cols.map((col,i)=>mkFig(g,col,{flat:true,tl:i===1?46:42,hr:i===1?13:12,th:i===1?27:25,sh:i===1?27:25}));
+      const bub=el('g',{},g);
+      const br=el('rect',{x:-44,y:-14,width:88,height:26,rx:11,fill:'#38322c',stroke:'#aea399','stroke-width':1.5},bub);
+      el('path',{d:'M-6 11 L0 22 L8 11',fill:'#38322c',stroke:'#aea399','stroke-width':1.5,'stroke-linejoin':'round'},bub);
+      el('rect',{x:-8,y:8,width:18,height:4,fill:'#38322c'},bub);
+      const bt=txt(bub,0,4,'',{'font-size':11.5,fill:'#f1f0ee','font-weight':600});
+      [['😂',112,44,0],['❤️',186,30,.8],['🎉',254,40,1.5]].forEach(([s,x,y,d])=>txt(g,x,y,s,{'font-size':17,class:'float',style:`animation-delay:${d}s`}));
+      const haha=txt(g,160,24,'',{'font-size':13,fill:'#FFC93C','font-weight':700,'font-family':'Space Grotesk'});
+      return {figs,xs,bub,bt,haha,br,lastTurn:-1};},
+    update(c,t){
+      const lines=['Guess what…','No way!! 😮','Remember when…','Same here!','Let’s go again!','You’re the best'];
+      const turn=Math.floor(t/1.8), spk=turn%3, cyc=t%7.2, laugh=cyc>5.2&&cyc<6.4;
+      c.figs.forEach((f,i)=>{
+        const ph=t*5+i*2, talk=i===spk&&!laugh, side=Math.sign(c.xs[spk]-c.xs[i])||0;
+        const bounce=laugh?3.5*Math.abs(Math.sin(t*16+i)):0;
+        const P={x:c.xs[i],y:(i===1?120:124)-bounce,lean:laugh?0.06*Math.sin(t*16+i):0.05*side,neck:0.1*side,
+          lF:[0.12,-0.03],lB:[-0.12,0.03]};
+        if(talk){P.aF=[0.55+0.35*Math.sin(ph),1.0+0.5*Math.sin(ph*1.3+1)];P.aB=[-0.35-0.25*Math.sin(ph*0.8),-0.5];}
+        else if(laugh){P.aF=[0.4,1.8];P.aB=[-0.4,-1.8];}
+        else {P.aF=[0.14,0.12];P.aB=[-0.14,-0.12];}
+        const J=f.set(P);
+        if(i===spk){c.bub.setAttribute('transform',`translate(${clamp(J.C[0],118,272)} ${J.C[1]-34})`);}
+      });
+      if(turn!==c.lastTurn){c.lastTurn=turn;c.bt.textContent=lines[turn%lines.length];}
+      c.bub.setAttribute('opacity',laugh?0:1);
+      c.haha.textContent=laugh?'HAHA 😂 HAHA':'';
+    }},
+  sleep:{build(g){
+      el('rect',{width:320,height:200,fill:'#0a0908',opacity:.6},g);
+      for(let i=0;i<16;i++)el('circle',{cx:(i*97)%300+10,cy:(i*53)%90+8,r:(i%3)*.5+.7,fill:'#cfe0ff',class:'twinkle',style:`animation-delay:${(i*.31)%2.4}s`},g);
+      txt(g,276,46,'🌙',{'font-size':28});
+      el('rect',{x:86,y:110,width:9,height:58,rx:3,fill:'#484038'},g);
+      el('rect',{x:90,y:146,width:164,height:11,rx:3,fill:'#484038'},g);
+      el('rect',{x:248,y:132,width:7,height:36,rx:3,fill:'#484038'},g);
+      el('ellipse',{cx:112,cy:140,rx:16,ry:7,fill:'#e1dcd8'},g);
+      const f=mkFig(g,'#f1f0ee');
+      const bl=el('path',{fill:'#807265',stroke:'#9f9284','stroke-width':1.5},g);
+      const zs=[0,1,2].map(i=>txt(g,0,0,'Z',{'font-size':10+i*4,fill:'#8fb6ff','font-weight':700,'font-family':'Space Grotesk'}));
+      const lbl=txt(g,160,190,'Sleep replay → consolidation',{'font-size':12,fill:'#8fb6ff'});
+      return {f,bl,zs,lbl};},
+    update(c,t){
+      const br=Math.sin(t*2*Math.PI/3);
+      const J=c.f.set({x:182,y:138,lean:-Math.PI/2,neck:-0.1,lF:[Math.PI/2,0],lB:[Math.PI/2-0.04,0.02],aF:[Math.PI/2-0.08,0.05],aB:[Math.PI/2-0.12,0.05]});
+      const y=129-1.6*br;
+      c.bl.setAttribute('d',`M140 ${y} Q190 ${y-6} 246 ${y+3} L246 147 L140 147 Z`);
+      c.zs.forEach((z,i)=>{const f=((t*0.6)+i/3)%1;z.setAttribute('x',J.C[0]+8+f*30+i*4);z.setAttribute('y',J.C[1]-10-f*42);z.setAttribute('opacity',(Math.sin(f*Math.PI)).toFixed(2));});
+    }}
+};
+let scene=null, sceneT0=0, sceneKey='';
+function setPose(id){
+  const key=id||'idle';
+  if(key===sceneKey&&scene)return;
+  sceneKey=key; gScene.innerHTML='';
+  scene=SCENES[key]; sceneT0=performance.now(); scene.ctx=scene.build(gScene);
+  miniSeq=key==='idle'?[]:key==='sleep'?['hip','pfc','hip','str','hip','mot']:[...ACTS[key].path.map(p=>p[0]),ACTS[key].path.at(-1)[1]];
+}
+
+/* ================= Game model ================= */
+const floorW=k=>Math.max(W0,0.4*S.peak[k]);
+function cost(id){return Math.max(1,Math.round(ACTS[id].base*(S.habits[id].tiny?0.5:1)*(1-0.85*S.habits[id].A)));}
+function tTime(id){return ACTS[id].time*(S.habits[id].tiny?0.5:1);}
+function resistCost(){const As=S.habits.scrollen.A,Am=S.habits.meditieren.A;return Math.max(3,Math.round((10+30*As)*(1-0.5*Am)));}
+function urgeChance(){return Math.min(0.85,(0.2+0.6*S.habits.scrollen.A)*(S.stress?1.5:1)*(S.phoneAway?0.4:1));}
+function cueMult(id){
+  const h=S.habits[id]; let m=1;
+  if(h.cue.startsWith('stack:')){ m=S.habits[h.cue.slice(6)].A>=0.5?1.3:1.05; }
+  else if(h.cue) m=1.2;
+  return m*(h.tiny?0.8:1);
+}
+function strengthen(a,b,lr){
+  const k=ekey(a,b); S.w[k]+=lr*(1-S.w[k]); S.peak[k]=Math.max(S.peak[k],S.w[k]); S.usedToday.add(k); return k;
+}
+function timeCheck(id){
+  const t=tTime(id);
+  if(S.time-t < -MAX_LATE) return 'none';
+  if(S.time-t < 0) return 'late';
+  return 'ok';
+}
+function applyHabit(id){
+  const h=S.habits[id], act=ACTS[id];
+  const rep=h.done>0;
+  const gain=act.k*cueMult(id)*(rep?0.35:1)*Math.max(0,1-h.A-h.pending);
+  h.A+=gain*0.5; h.pending+=gain*0.5; h.peak=Math.max(h.peak,h.A);
+  h.done++; h.reps++;
+  S.time-=tTime(id);
+  if(!S.today.includes(id))S.today.push(id);
+  return {gain,rep};
+}
+function doActivity(id,forced){
+  if(S.busy||S.ended||(S.modal&&!forced))return false;
+  const act=ACTS[id], h=S.habits[id];
+  if(!allPlaced()){
+    const missing=[...new Set(act.path.flat())].filter(n=>!S.placed[n]);
+    if(missing.length){toast(`First drag these neurons into the brain: ${missing.map(n=>NODES[n].name).join(', ')}`);return false;}
+  }
+  if(id!=='scrollen' && h.done){toast(`${act.emoji} Already done today. Half of today’s progress gets locked in tonight during sleep → “next day”.`);return false;}
+  const c=cost(id);
+  if(!forced && c>S.energy){
+    let msg=`😮‍💨 Not enough energy (needs ${c}, ${S.energy} left). New habits are effortful – that’s why they so often fail at the end of a long day.`;
+    if(S.energy>=cost('scrollen')) msg+=' Irony: there’s still plenty left for scrolling.';
+    toast(msg);return false;
+  }
+  const tc=timeCheck(id);
+  if(tc==='none'){toast('🕛 It’s way too late – time to sleep.');return false;}
+  const before=h.A, g=GEN;
+  S.energy=Math.max(0,S.energy-c);
+  const {gain,rep}=applyHabit(id);
+  if(tc==='late') toast(`🌙 That cut into your sleep (${(-S.time).toFixed(1)}h). Tonight’s consolidation will be weaker and you’ll start tomorrow tired.`);
+  if(id==='scrollen'&&!forced)S.volScroll=true;
+  S.current=id;
+  setPose(id); renderInfo(id); renderAll();
+  const step=650, total=act.path.length*step;
+  playLoop(id,total+300);
+  S.busy=true; renderActs();
+  const pfcLoad=1-0.8*before;
+  S.glow[act.path[0][0]]=1; ripple(act.path[0][0]);
+  const lr=LR*cueMult(id)*(rep?0.5:1);
+  firePath(act.path,{step,alpha:(a,b)=>(a==='pfc'||b==='pfc')?(0.3+0.7*pfcLoad):1,lrFn:(a,b)=>{
+    if(g!==GEN)return;
+    const k=ekey(a,b), wb=S.w[k], touchesPfc=(a==='pfc'||b==='pfc');
+    strengthen(a,b,lr);
+    edgeEls[k].flash=1; S.glow[b]=Math.max(S.glow[b]||0,touchesPfc?0.3+0.7*pfcLoad:1); ripple(b);
+    const pa=DP[a],pb=DP[b];
+    floatText((pa.x+pb.x)/2,(pa.y+pb.y)/2-8,'+'+Math.max(1,Math.round((S.w[k]-wb)*100))+'%',NODES[b].color);
+    renderMatrix(); renderSyn();
+  }});
+  setTimeout(()=>{
+    if(g!==GEN)return;
+    S.busy=false;
+    $('caption').textContent=`${act.emoji} Done! Autopilot ${Math.round(before*100)}% → ${Math.round(h.A*100)}% (+${Math.round(gain*50)}% after sleep)`;
+    renderAll(); checkWin();
+    if(id!=='scrollen' && !S.modal && !S.ended) maybeUrge();
+  },total+500);
+  return true;
+}
+
+/* urges */
+function maybeUrge(){
+  if(S.urges>=2||S.ended||S.modal)return;
+  if(Math.random()<urgeChance()){const g=GEN;setTimeout(()=>{if(g===GEN)showUrge();},500);}
+}
+function showUrge(){
+  if(S.modal||S.ended||S.busy)return;   // never open an urge on top of a running action
+  S.urges++;
+  const rc=resistCost(), can=S.energy>=rc, As=S.habits.scrollen.A;
+  openModal(`<h2><span class="phone-shake">📱</span> Bzzz… your phone buzzes</h2>
+    <p>The scroll loop fires on its own – that’s what a habit does. Scroll autopilot: <b>${Math.round(As*100)}%</b>.${S.stress?' Stress makes urges stronger today.':''}</p>
+    <p>Resisting means your PFC has to step in. It costs <b>${rc} energy</b> (you have ${S.energy}).${S.habits.meditieren.A>0.2?' Your meditation habit makes this cheaper.':''}</p>
+    <div class="btnrow"><button class="primary" id="uRes" ${can?'':'disabled'}>💪 Resist (−${rc} ⚡)</button><button id="uGive">😅 Give in (scroll)</button></div>
+    ${can?'':'<p style="font-size:12.5px;color:#ffb0bb">Not enough energy left to resist.</p>'}`);
+  $('uRes').onclick=()=>{closeModal();resist(true);};
+  $('uGive').onclick=()=>{closeModal();giveIn(true);};
+}
+function resist(animate){
+  const rc=resistCost(); if(S.energy<rc)return false;
+  S.energy-=rc; S.resisted++;
+  const h=S.habits.scrollen, fA=0.4*h.peak;
+  h.A-=0.07*(h.A-fA);
+  SCROLL_EDGES.forEach(k=>{S.w[k]-=0.05*(S.w[k]-floorW(k));});
+  strengthen('pfc','str',0.03);
+  if(animate){
+    S.glow.pfc=1; ripple('pfc');
+    firePath([['pfc','str']],{color:NODES.pfc.color,lrFn:()=>{ripple('str','#4C8DFF');S.glow.str=1;edgeEls[ekey('pfc','str')].flash=1;floatText(DP.str.x,DP.str.y-36,'STOP','#4C8DFF',16);}});
+    SCROLL_EDGES.forEach(k=>{const [a,b]=k.split('|');const pa=DP[a],pb=DP[b];floatText((pa.x+pb.x)/2,(pa.y+pb.y)/2-8,'−weaker','#ff8a93');});
+    $('caption').textContent=`💪 Resisted! The PFC stepped in (blue signal to the reward system) and the scroll loop got a bit weaker. Scroll autopilot: ${Math.round(h.A*100)}%.`;
+    renderAll(); checkWin();
+  }
+  return true;
+}
+function giveIn(animate){
+  if(animate){ if(doActivity('scrollen',true)) S.gaveIn++; renderGoals(); return; }
+  if(timeCheck('scrollen')==='none')return;
+  S.gaveIn++;
+  S.energy=Math.max(0,S.energy-cost('scrollen'));
+  applyHabit('scrollen');
+  ACTS.scrollen.path.forEach(([a,b])=>strengthen(a,b,LR));
+}
+
+/* days */
+function endDay(){
+  const over=Math.max(0,-S.time);
+  const sleepF=1-0.25*over;
+  for(const k in S.w){ if(!S.usedToday.has(k)) S.w[k]-=0.02*(S.w[k]-floorW(k)); }
+  ACT_IDS.forEach(id=>{const h=S.habits[id];
+    h.A=Math.min(1,h.A+h.pending*sleepF); h.pending=0; h.peak=Math.max(h.peak,h.A);
+    if(h.done){h.streak++;h.miss=0;}
+    else if(h.reps>0){h.miss++;h.streak=0; h.A-=(h.miss>=2?0.04:0.01)*(h.A-0.4*h.peak);}
+    h.hist.push(h.A); h.done=0;});
+  S.lastDay=S.today.length?[...S.today]:S.lastDay;
+  S.lastVol=S.today.length?S.volScroll:S.lastVol;
+  S.today=[]; S.usedToday=new Set(); S.urges=0; S.phoneAwayLast=S.phoneAway; S.phoneAway=false; S.volScroll=false;
+  const twice=GOOD.filter(id=>S.habits[id].miss===2);
+  S.day++;
+  const Am=S.habits.meditieren.A;
+  let maxE=100-15*over;
+  S.stress=false; S.event=null;
+  const r=Math.random();
+  if(r<0.07){maxE=Math.min(maxE,55);S.event='🤒 You woke up sick. Very little energy today – a missed day barely matters for long-term habits, so don’t panic.';}
+  else if(r<0.19){S.stress=true;maxE-=Math.round(25*(1-0.6*Am));S.event=`😫 Stressful day (exam/deadline). Less energy and stronger phone urges.${Am>0.3?' Your meditation habit softens the stress.':''}`;}
+  else if(over>0){S.event=`🥱 You stayed up ${over.toFixed(1)}h too late: only ${Math.round(sleepF*100)}% of yesterday’s progress got consolidated, and you start tired.`;}
+  S.maxEnergy=Math.max(30,maxE); S.energy=S.maxEnergy; S.time=FREE;
+  if(twice.length) S.event=(S.event?S.event+' ':'')+`⚠️ Missed twice in a row: ${twice.map(id=>ACTS[id].emoji).join(' ')} – the habit is fading faster now. Never miss twice!`;
+  if(S.day>GOAL_DAY){S.ended=true;S.day=GOAL_DAY;}
+  return over;
+}
+function nextDay(){
+  if(S.busy||S.ended||S.modal)return;
+  const g=GEN, did=S.today.length, acts=[...S.today];
+  const before={}; ACT_IDS.forEach(id=>before[id]=S.habits[id].A);
+  S.busy=true; renderActs(); setPose('sleep');
+  $('caption').textContent='💤 Sleeping… the hippocampus replays today’s patterns so they can be stored long-term.';
+  const now=performance.now(), dur=did?2800:1600;
+  S.sleep={t0:now,dur};
+  // replay: today's paths re-run compressed (sharp-wave ripples)
+  const seq=[]; acts.forEach(id=>ACTS[id].path.forEach(p=>seq.push(p)));
+  if(seq.length){
+    const step=Math.min(150,1700/(seq.length*2));
+    for(let r=0;r<2;r++) seq.forEach(([a,b],i)=>pulses.push({k:ekey(a,b),from:a,t0:now+350+(r*seq.length+i)*step,dur:260,color:'#d9e6ff',alpha:.95,size:4.5,
+      onArrive:()=>{if(g!==GEN)return;edgeEls[ekey(a,b)].flash=Math.max(edgeEls[ekey(a,b)].flash,.7);S.glow[b]=Math.max(S.glow[b]||0,.6);}}));
+  }
+  setTimeout(()=>{
+    if(g!==GEN)return;
+    S.sleep=null;
+    endDay(); bumpDay();
+    acts.forEach((id,i)=>{const d=Math.round((S.habits[id].A-before[id])*100);if(d>0){const m=DP[ACTS[id].main];setTimeout(()=>floatText(m.x,m.y-40,`${ACTS[id].emoji} +${d}% locked in`,'#d9e6ff',13),i*250);}});
+    S.busy=false;
+    setPose(null);
+    $('caption').textContent=did?'☀️ Good morning! During sleep, yesterday’s practice was consolidated. Unused paths weakened slightly.':'☀️ A day without practice – unused connections got a little weaker (but never vanish).';
+    renderAll();
+    if(S.ended){showEnd();return;}
+    checkWin();
+    if(!S.modal) maybeUrge();
+  },dur);
+}
+function bumpDay(){const v=$('dayV');v.classList.remove('bump');void v.offsetWidth;v.classList.add('bump');}
+function quickDo(id){
+  const h=S.habits[id];
+  if(h.done && id!=='scrollen')return false;
+  const c=cost(id); if(c>S.energy)return false;
+  if(timeCheck(id)!=='ok')return false;
+  S.energy-=c; const {rep}=applyHabit(id);
+  ACTS[id].path.forEach(([a,b])=>strengthen(a,b,LR*cueMult(id)*(rep?0.5:1)));
+  return true;
+}
+function fastForward(n){
+  if(S.busy||S.ended||S.modal)return;
+  if(!allPlaced()){toast('Place all neurons first.');return;}
+  const plan=(S.today.length?[...S.today]:[...S.lastDay]).filter(id=>id!=='scrollen'||(S.today.length?S.volScroll:S.lastVol));
+  if(!plan.length){toast('Do a few activities today first – then I’ll repeat exactly those every day.');return;}
+  const g=GEN, failed={}, wasWon=S.won; let res=0,give=0,sick=0,stress=0,days=0,i=0;
+  S.busy=true; S.current=plan[0]; setPose(plan[0]); renderInfo(plan[0]); renderActs();
+  const finish=()=>{
+    if(g!==GEN)return;
+    S.busy=false;
+    const fails=Object.entries(failed).map(([id,c])=>`${ACTS[id].emoji} ${c}×`).join(', ');
+    $('caption').textContent=`⏩ ${days} days of: ${plan.map(id=>ACTS[id].emoji).join(' ')}. Phone urges: ${res} resisted, ${give} gave in. Sick days: ${sick}, stressful days: ${stress}.`+(fails?` Skipped (no energy/time): ${fails}.`:'');
+    renderAll();
+    ORDER.forEach(id=>{S.glow[id]=1;ripple(id);});
+    if(S.ended){showEnd();return;}
+    checkWin();
+  };
+  const step=()=>{
+    if(g!==GEN)return;
+    if(i>=n||S.ended||(!wasWon&&isWin())){finish();return;}
+    endDay(); i++;
+    if(S.ended){finish();return;}
+    days++;
+    if(S.event&&S.event.startsWith('🤒'))sick++; if(S.stress)stress++;
+    if(S.phoneAwayLast&&S.energy>=4){S.energy-=4;S.phoneAway=true;}
+    const urge=()=>{ if(Math.random()<urgeChance()){ if(resist(false))res++; else {giveIn(false);give++;} } };
+    urge();
+    const doneToday=[];
+    plan.slice().sort((a,b)=>cost(a)-cost(b)).forEach(id=>{if(quickDo(id))doneToday.push(id);else failed[id]=(failed[id]||0)+1;});
+    urge();
+    S.urges=2;
+    // quick visual: each day's activities flash through the network
+    doneToday.forEach((id,j)=>firePath(ACTS[id].path,{step:90,stagger:40,count:1,dur:220,alpha:.75,t0:performance.now()+j*60}));
+    $('caption').textContent=`⏩ Day ${S.day}: ${doneToday.map(id=>ACTS[id].emoji).join(' ')||'nothing fit today'} …`;
+    renderAll(); bumpDay();
+    setTimeout(step,n>10?70:140);
+  };
+  step();
+}
+
+/* win / end */
+const formed=()=>GOOD.filter(id=>S.habits[id].A>=WIN_A);
+const isWin=()=>formed().length>=3 && S.habits.scrollen.A<SCROLL_MAX;
+function stars(){const f=formed().length;return isWin()?1+(f===4?1:0)+(S.habits.scrollen.A<0.25?1:0):0;}
+function starStr(n){return '★'.repeat(n)+'<span style="opacity:.25">'+'★'.repeat(3-n)+'</span>';}
+function checkWin(){
+  if(!S.won && isWin()){
+    S.won=true; S.wonDay=S.day;
+    const st=stars();
+    openModal(`<h2>🏆 You won on day ${S.day}!</h2><div class="stars">${starStr(st)}</div>
+      <p>${formed().map(id=>ACTS[id].emoji+' '+ACTS[id].label).join(', ')} now run${formed().length>1?'':'s'} on autopilot, and the scroll habit is under control (${Math.round(S.habits.scrollen.A*100)}%).</p>
+      <p>That’s neuroplasticity: the same brain, rewired by repetition. (Real-life average: about 66 days.)</p>
+      <ul><li>★ Win: 3 good habits ≥80% + scrolling under 50%</li><li>★ All 4 good habits formed</li><li>★ Scrolling autopilot under 25%</li></ul>
+      <div class="btnrow"><button class="primary" id="mKeep">Keep playing to day ${GOAL_DAY}</button><button id="mRe">Restart</button></div>`);
+    $('mKeep').onclick=closeModal; $('mRe').onclick=()=>{closeModal();restart();};
+    ORDER.forEach((id,i)=>setTimeout(()=>{S.glow[id]=1;ripple(id);},i*120));
+  }
+}
+function showEnd(){
+  renderAll();
+  const f=formed(), st=stars();
+  const tips=['Set a cue for every habit – it speeds things up by about 20% in the game.','Start with 2 habits, add more once they get cheap.','Resist phone urges early, while the scroll loop is still weak.','Don’t stay up late – sleep locks in half of each day’s progress.'];
+  const win=S.won||isWin();
+  openModal(win?`<h2>🏁 Day ${GOAL_DAY} – final result</h2><div class="stars">${starStr(st)}</div>
+      <p>You won${S.wonDay?` on day ${S.wonDay}`:''}. Formed habits: ${f.map(id=>ACTS[id].emoji).join(' ')||'–'} · Scrolling: ${Math.round(S.habits.scrollen.A*100)}% · Urges resisted: ${S.resisted}.</p>
+      <div class="btnrow"><button class="primary" id="mRe">Play again</button></div>`
+    :`<h2>⏰ Day ${GOAL_DAY} – time’s up</h2>
+      <p>Formed habits: <b>${f.length}/3</b> ${f.map(id=>ACTS[id].emoji).join(' ')} · Scrolling autopilot: <b>${Math.round(S.habits.scrollen.A*100)}%</b> (goal: under 50%).</p>
+      <p>Building habits really is this hard – in real life too. Tips for the next round:</p><ul>${tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+      <div class="btnrow"><button class="primary" id="mRe">Try again</button></div>`);
+  $('mRe').onclick=()=>{closeModal();restart();};
+}
+function openModal(html){$('mbox').innerHTML=html;$('modal').classList.add('show');S.modal=true;renderActs();}
+function closeModal(){$('modal').classList.remove('show');S.modal=false;renderActs();}
+function restart(){
+  GEN++;                     // cancels every pending timer from the old game
+  pulses.length=0; ripples.length=0; floats.forEach(F=>F.el.remove()); floats.length=0;
+  loopTimers.forEach(clearTimeout); loopTimers=[]; loopShown=null; synSig=null;
+  S=fresh(); sceneKey=''; setPose(null); renderInfo(null);
+  $('caption').textContent='Restarted. The person already has a scrolling habit – everything else is new.';
+  renderAll();
+}
+
+/* ================= Rendering ================= */
+function renderLegend(){
+  $('legend').innerHTML=ORDER.map(id=>`<div class="lg"><span class="dot" style="background:${NODES[id].color};color:${NODES[id].color}"></span><div><b>${NODES[id].name}</b>${NODES[id].role}</div></div>`).join('');
+}
+function renderActs(){
+  const lock=S.busy||S.modal||S.ended;
+  $('acts').innerHTML=ACT_IDS.map(id=>{
+    const a=ACTS[id],h=S.habits[id];
+    return `<button class="act${h.done?' done':''}${S.current===id?' active':''}" style="--c:${NODES[a.main].color}" data-id="${id}" ${lock?'disabled':''}>
+      <span class="em">${a.emoji}</span><span class="nm">${a.label}${h.cue?' 🔗':''}${h.tiny?' 🤏':''}</span><span class="cost">−${cost(id)}⚡ · ${tTime(id)}h</span></button>`;
+  }).join('');
+  $('acts').querySelectorAll('.act').forEach(b=>b.onclick=()=>doActivity(b.dataset.id));
+  ['nextDay','ff7','ff30'].forEach(i=>$(i).disabled=lock);
+  $('phoneAway').disabled=S.phoneAway||lock;
+}
+function renderHud(){
+  $('dayV').textContent=S.day+'/'+GOAL_DAY;
+  $('willT').textContent=`${S.energy}/${S.maxEnergy}`;
+  $('willBar').style.width=(S.energy/S.maxEnergy*100)+'%';
+  $('timeT').textContent=S.time>=0?`${S.time}h left`:`${(-S.time)}h of sleep lost`;
+  $('timeBar').style.width=Math.max(0,S.time/FREE*100)+'%';
+  const ev=$('event'); ev.style.display=S.event?'block':'none'; if(ev.textContent!==(S.event||''))ev.textContent=S.event||'';
+}
+function renderGoals(){
+  const f=formed().length, sc=S.habits.scrollen.A;
+  $('goals').innerHTML=`<span class="gt">🎯 Goal by day ${GOAL_DAY}:</span>
+    <span class="gchip ${f>=3?'ok':''}">Good habits formed (≥80%): ${f}/3</span>
+    <span class="gchip ${sc<SCROLL_MAX?'ok':'bad'}">📱 Scroll autopilot: ${Math.round(sc*100)}% (keep under 50%)</span>
+    <span class="gchip">💪 Urges resisted: ${S.resisted} · 😅 gave in: ${S.gaveIn}</span>
+    ${S.won?'<span class="gchip ok">🏆 Won on day '+S.wonDay+'</span>':''}`;
+}
+function phaseOf(id){
+  const A=S.habits[id].A;
+  if(id==='scrollen') return A<SCROLL_MAX?'<span class="tag auto">under control</span>':'<span class="tag" style="background:#3d1a22;color:#ffb0bb">runs your day</span>';
+  if(S.habits[id].reps===0) return '<span class="tag">not started</span>';
+  if(A<0.2) return '<span class="phase ph1">1 · Initiation</span>';
+  if(A<WIN_A) return '<span class="phase ph2">2 · Learning</span>';
+  return '<span class="phase ph3">3 · Stable ✓</span>';
+}
+function cueOptions(id){
+  const h=S.habits[id];
+  const base=CUES.map(c=>`<option value="${c}" ${h.cue===c?'selected':''}>${c||'– no cue –'}</option>`);
+  const stack=GOOD.filter(o=>o!==id).map(o=>`<option value="stack:${o}" ${h.cue==='stack:'+o?'selected':''}>After ${ACTS[o].emoji} (stack)</option>`);
+  return base.join('')+'<optgroup label="Habit stacking">'+stack.join('')+'</optgroup>';
+}
+function renderTable(){
+  const tb=$('tbody');
+  if(tb.contains(document.activeElement)&&document.activeElement.tagName==='SELECT')return; // don't rebuild a select while it's open
+  tb.innerHTML=ACT_IDS.map(id=>{
+    const a=ACTS[id],h=S.habits[id],col=NODES[a.main].color;
+    const pend=h.pending>0.001?` <span style="color:#8fb6ff">(+${Math.round(h.pending*100)}% tonight)</span>`:'';
+    const isS=id==='scrollen';
+    const cue=isS?'<span style="font-size:11.5px;color:var(--muted)">phone buzz</span>':`<select data-cue="${id}">${cueOptions(id)}</select>`;
+    const size=isS?'–':`<select data-size="${id}"><option value="full" ${h.tiny?'':'selected'}>Full</option><option value="tiny" ${h.tiny?'selected':''}>🤏 Tiny</option></select>`;
+    const streak=isS?'–':(h.streak?`🔥${h.streak}`:(h.miss>=2?'<span style="color:#ff8a93">✗✗</span>':(h.miss===1?'<span style="color:#ffd08a">✗</span>':'0')));
+    return `<tr><td style="white-space:nowrap">${a.emoji} ${a.label}</td>
+      <td><div class="bar"><i style="width:${(h.A*100).toFixed(1)}%;background:${col}"></i></div><span style="font-size:11px;color:var(--muted)">${Math.round(h.A*100)}%${pend}</span></td>
+      <td>${phaseOf(id)}</td><td>${streak}</td><td>${cue}</td><td>${size}</td><td style="white-space:nowrap">${cost(id)}⚡ ${tTime(id)}h</td></tr>`;
+  }).join('');
+  tb.querySelectorAll('select[data-cue]').forEach(s=>s.onchange=()=>{
+    const id=s.dataset.cue; S.habits[id].cue=s.value; s.blur();
+    if(s.value.startsWith('stack:')){const o=s.value.slice(6);const strong=S.habits[o].A>=0.5;
+      toast(`🔗 Habit stacking: “After ${ACTS[o].label.toLowerCase()}, I ${ACTS[id].label.toLowerCase()}.” `+(strong?'Your anchor habit is already strong – big boost!':'Tip: stacking works best once the anchor habit is ≥50% automatic.'));}
+    else if(s.value)toast(`🔗 “${s.value} → ${ACTS[id].label.toLowerCase()}”. A fixed cue makes the loop reliable – this habit now forms faster.`);
+    renderAll();
+  });
+  tb.querySelectorAll('select[data-size]').forEach(s=>s.onchange=()=>{
+    const id=s.dataset.size; S.habits[id].tiny=s.value==='tiny'; s.blur();
+    if(S.habits[id].tiny)toast(`🤏 Tiny version: half the effort and time. It still builds the habit – showing up every day matters more than doing a lot.`);
+    renderAll();
+  });
+}
+
+/* ================= Connectome lab ================= */
+function nodeStrength(id){let s=0;for(const k in S.w){const [a,b]=k.split('|');if((a===id||b===id)&&S.placed[a]&&S.placed[b])s+=S.w[k];}return s;}
+function hubId(){let best=null,bv=-1;ORDER.forEach(id=>{const v=nodeStrength(id);if(v>bv){bv=v;best=id;}});return best;}
+function strongestEdge(){let best=null,bv=-1;for(const k in S.w){if(S.w[k]>bv){bv=S.w[k];best=k;}}return best;}
+function selectEdge(k,fromNet){S.selEdge=k;renderMatrix();renderSyn();if(fromNet){const [a,b]=k.split('|');toast(`🔬 Zoomed into ${NODES[a].name} ↔ ${NODES[b].name} – see “Zoom in” further down.`);}}
+function usedBy(k){return ACT_IDS.filter(id=>ACTS[id].path.some(([a,b])=>ekey(a,b)===k));}
+function renderMatrix(){
+  const sel=S.selEdge||strongestEdge();
+  let h='<tr><th></th>'+ORDER.map(id=>`<th><span class="dot" style="display:inline-block;width:9px;height:9px;margin:0 3px 0 0;background:${NODES[id].color};color:${NODES[id].color};box-shadow:none"></span>${NODES[id].short}</th>`).join('')+'</tr>';
+  ORDER.forEach(r=>{
+    h+=`<tr><th style="text-align:right;padding-right:6px">${NODES[r].short}</th>`;
+    ORDER.forEach(c=>{
+      if(r===c){h+='<td class="diag">–</td>';return;}
+      const k=ekey(r,c), w=S.w[k];
+      h+=`<td data-k="${k}" class="${k===sel?'sel':''}" style="background:rgba(255,170,60,${(0.06+w*0.9).toFixed(3)})" title="${NODES[r].name} ↔ ${NODES[c].name}">${Math.round(w*100)}</td>`;
+    });
+    h+='</tr>';
+  });
+  $('matrix').innerHTML=h;
+  $('matrix').querySelectorAll('td[data-k]').forEach(td=>td.onclick=()=>selectEdge(td.dataset.k));
+  const total=Object.values(S.w).reduce((a,b)=>a+b,0), total0=Object.values(S.w0).reduce((a,b)=>a+b,0);
+  const hub=hubId(), se=strongestEdge(), [a,b]=se.split('|');
+  let up=null,uv=-9,dn=null,dv=9;
+  for(const k in S.w){const d=S.w[k]-S.w0[k];if(d>uv){uv=d;up=k;}if(d<dv){dv=d;dn=k;}}
+  const nm=k=>{const [x,y]=k.split('|');return NODES[x].short+'–'+NODES[y].short;};
+  $('metrics').innerHTML=`
+    <div class="metric"><span class="v">${total.toFixed(2)}</span>total wiring strength (${total>=total0?'+':''}${Math.round((total/total0-1)*100)}% since day 1)</div>
+    <div class="metric"><span class="v" style="color:${NODES[hub].color}">★ ${NODES[hub].short}</span>hub – most strongly connected region</div>
+    <div class="metric"><span class="v">${NODES[a].short}–${NODES[b].short}</span>strongest connection (${Math.round(S.w[se]*100)}%)</div>
+    <div class="metric"><span class="v" style="color:#8ff3c6">${uv>0.005?nm(up)+' ↑':'–'}</span>${uv>0.005?`grew most (+${Math.round(uv*100)} pts)`:'nothing has grown yet'}</div>
+    ${dv<-0.005?`<div class="metric"><span class="v" style="color:#ff8a93">${nm(dn)} ↓</span>weakened most (${Math.round(dv*100)} pts)</div>`:''}`;
+}
+
+/* ================= Synapse zoom (live) ================= */
+let synSeed=1; const rnd=()=>{synSeed=(synSeed*16807)%2147483647;return synSeed/2147483647;};
+let synSig=null, SYN=null, synPrev={k:null,nR:0};
+function renderSyn(){
+  const k=S.selEdge||strongestEdge(), [a,b]=k.split('|'), w=S.w[k];
+  const ca=NODES[a].color, cb=NODES[b].color;
+  const nV=4+Math.round(w*18), nR=3+Math.round(w*14), my=1+Math.round(w*4), spine=Math.round(34+w*26);
+  const sig=[k,nV,nR,my,spine].join(',');
+  if(sig!==synSig){
+    synSig=sig;
+    $('synName').textContent=`· ${NODES[a].name} → ${NODES[b].name}`;
+    synSeed=7+ORDER.indexOf(a)*13+ORDER.indexOf(b);
+    const gaps=[6,58,110,162];
+    let s=`<defs><radialGradient id="bulb" cx="40%" cy="45%"><stop offset="0" stop-color="${ca}" stop-opacity=".55"/><stop offset="1" stop-color="${ca}" stop-opacity=".18"/></radialGradient>
+      <radialGradient id="spineG" cx="60%" cy="50%"><stop offset="0" stop-color="${cb}" stop-opacity=".5"/><stop offset="1" stop-color="${cb}" stop-opacity=".15"/></radialGradient>
+      <filter id="sglow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4"/></filter></defs>`;
+    s+=`<line x1="0" y1="125" x2="170" y2="125" stroke="${ca}" stroke-width="6" opacity=".8"/>`;
+    for(let i=0;i<3;i++){const x=12+i*52;s+=`<rect x="${x}" y="${125-7-my*2.2}" width="40" height="${14+my*4.4}" rx="${7+my*2.2}" fill="#e8e4e1" opacity="${0.25+0.12*my}" stroke="#eef1fb" stroke-width="${my*0.8}"/>`;}
+    gaps.slice(1,3).forEach(x=>{s+=`<circle cx="${x}" cy="125" r="4" fill="none" stroke="${ca}" stroke-width="1.2" opacity=".7"/>`;});
+    s+=`<path d="M165 125 C170 60 250 55 262 125 C250 195 170 190 165 125 Z" fill="url(#bulb)" stroke="${ca}" stroke-width="2.5"/>`;
+    for(let i=0;i<nV;i++){const ang=rnd()*Math.PI*2,r=Math.sqrt(rnd())*38;const x=210+Math.cos(ang)*r*0.9,y=125+Math.sin(ang)*r*1.2;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="none" stroke="${ca}" stroke-width="1.8"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" fill="${ca}"/>`;}
+    s+=`<path d="M300 ${125-spine} C340 ${125-spine-10} 380 ${125-spine+8} 400 ${125-12} L520 ${125-10} L520 ${125+10} L400 ${125+12} C380 ${125+spine-8} 340 ${125+spine+10} 300 ${125+spine} Z" fill="url(#spineG)" stroke="${cb}" stroke-width="2.5"/>`;
+    const grow=synPrev.k===k&&nR>synPrev.nR?synPrev.nR:99;
+    for(let i=0;i<nR;i++){const y=125-spine*0.85+(spine*1.7)*(i+0.5)/nR;s+=`<rect class="rec${i>=grow?' pop':''}" x="298" y="${(y-3).toFixed(1)}" width="9" height="6" rx="2" fill="${cb}" opacity=".85"/>`;}
+    s+=`<text x="215" y="30" text-anchor="middle" class="nrole" style="font-size:11px">PRESYNAPTIC · ${NODES[a].short}</text>
+        <text x="390" y="30" text-anchor="middle" class="nrole" style="font-size:11px">POSTSYNAPTIC · ${NODES[b].short}</text>
+        <text x="85" y="${102-my*3}" text-anchor="middle" class="nrole">myelin ×${my}</text>
+        <text x="84" y="170" text-anchor="middle" class="nrole">gaps = nodes of Ranvier</text>
+        <text x="200" y="232" text-anchor="middle" class="nrole">vesicles</text>
+        <text x="281" y="246" text-anchor="middle" class="nrole">synaptic cleft</text>
+        <text x="352" y="232" text-anchor="middle" class="nrole">receptors</text>
+        <text x="468" y="108" text-anchor="middle" class="nrole">signal →</text>
+        <g id="synDyn"></g>`;
+    $('syn').innerHTML=s;
+    synPrev={k,nR};
+    // dynamic layer (animated every frame in updateSyn)
+    const dyn=$('synDyn'), nf=1+Math.round(w*4);
+    const vy=[...Array(nf)].map((_,j)=>125+(j-(nf-1)/2)*16);
+    SYN={w,gaps,vy,recs:[...$('syn').querySelectorAll('.rec')],
+      apH:el('circle',{r:11,fill:ca,filter:'url(#sglow)'},dyn), ap:el('circle',{r:4.5,fill:'#fff'},dyn),
+      ca:[0,1,2,3,4].map(()=>el('circle',{r:2.3,fill:'#7fe7ff'},dyn)), caL:txt(dyn,236,74,'Ca²⁺ in',{'font-size':10,fill:'#7fe7ff','font-weight':700}),
+      ves:vy.map(()=>el('circle',{r:6,fill:'none',stroke:'#fff','stroke-width':1.8},dyn)),
+      nt:[],psp:el('ellipse',{ry:9,fill:cb,filter:'url(#sglow)'},dyn)};
+    vy.forEach((y,j)=>{for(let m=0;m<3;m++)SYN.nt.push({e:el('circle',{r:2.3,fill:'#ffe9a8'},dyn),y,ph:j*1.7+m*2.1,d:(m-1)*0.04});});
+  }
+  $('synStats').innerHTML=`
+    <div class="metric"><span class="v">${Math.round(w*100)}%</span>connection strength</div>
+    <div class="metric"><span class="v" style="color:${ca}">${nV}</span>vesicles (neurotransmitter packets)</div>
+    <div class="metric"><span class="v" style="color:${cb}">${nR}</span>receptors on the spine</div>
+    <div class="metric"><span class="v">${my} layer${my>1?'s':''}</span>myelin insulation</div>`;
+  const u=usedBy(k);
+  $('synText').innerHTML=`Used by: ${u.length?u.map(id=>ACTS[id].emoji+' '+ACTS[id].label).join(', '):'<i>no activity in the game</i>'}. <details class="more2"><summary>▶ What am I watching? (5 steps)</summary><ol class="synsteps">
+      <li><b>Action potential</b> – an electrical spike runs down the axon and <b>jumps</b> from gap to gap between myelin segments (saltatory conduction). More myelin = faster.</li>
+      <li><b>Calcium</b> – at the terminal, voltage-gated channels open and Ca²⁺ (cyan) rushes in.</li>
+      <li><b>Release</b> – Ca²⁺ makes vesicles fuse with the membrane and spill neurotransmitter (yellow) into the cleft.</li>
+      <li><b>Receptors</b> – transmitter binds receptors on the spine (they flash) → a signal spreads into the next neuron.</li>
+      <li><b>LTP</b> – repeated strong firing triggers the cell to insert more receptors (e.g. AMPA receptors) and enlarge the spine. Do an activity that uses this path and watch new receptors pop in. Unused, the synapse slowly shrinks again – but rarely back to zero.</li>
+    </ol></details>`;
+}
+function updateSyn(T){
+  if(!SYN)return;
+  const w=SYN.w, P=3.4-1.2*w, f=T%P;
+  // 1 action potential: saltatory jumps
+  const nodes=[...SYN.gaps,172], apDur=0.55-0.06*w;
+  if(f<apDur){const seg=f/apDur*(nodes.length-1), i=Math.min(nodes.length-2,Math.floor(seg)), fr=seg-i, e=Math.min(1,fr/0.3);
+    const x=nodes[i]+(nodes[i+1]-nodes[i])*e;
+    SYN.ap.setAttribute('cx',x);SYN.ap.setAttribute('cy',125);SYN.apH.setAttribute('cx',x);SYN.apH.setAttribute('cy',125);
+    SYN.ap.setAttribute('opacity',1);SYN.apH.setAttribute('opacity',.9);}
+  else {SYN.ap.setAttribute('opacity',0);SYN.apH.setAttribute('opacity',0);}
+  // 2 calcium
+  const cg=(f-apDur)/0.45, co=cg>0&&cg<1?Math.sin(cg*Math.PI):0;
+  SYN.ca.forEach((c,i)=>{c.setAttribute('cx',(266-cg*24).toFixed(1));c.setAttribute('cy',100+i*12+Math.sin(cg*9+i)*2);c.setAttribute('opacity',co.toFixed(2));});
+  SYN.caL.setAttribute('opacity',co.toFixed(2));
+  // 3 vesicle fusion
+  const vg=(f-apDur-0.2)/0.35;
+  SYN.ves.forEach((v,j)=>{if(vg>0&&vg<1){v.setAttribute('cx',(238+vg*20).toFixed(1));v.setAttribute('cy',SYN.vy[j]);v.setAttribute('r',(6*(1-0.85*vg)).toFixed(2));v.setAttribute('opacity',(1-0.5*vg).toFixed(2));}else v.setAttribute('opacity',0);});
+  // 4 transmitter crossing the cleft
+  const ng=(f-apDur-0.45)/0.6;
+  SYN.nt.forEach(n=>{if(ng>0&&ng<1){const g=Math.min(1,ng*(1+n.d*4));n.e.setAttribute('cx',(260+g*38).toFixed(1));n.e.setAttribute('cy',(n.y+Math.sin(g*9+n.ph)*5).toFixed(1));n.e.setAttribute('opacity',g<0.9?1:((1-g)/0.1).toFixed(2));}else n.e.setAttribute('opacity',0);});
+  // 5 receptors flash + signal spreads
+  const rg=(f-apDur-0.95)/0.4;
+  SYN.recs.forEach(r=>{if(rg>0&&rg<1){r.setAttribute('stroke','#fff');r.setAttribute('stroke-width',(2*(1-rg)).toFixed(2));r.setAttribute('opacity',1);}else{r.setAttribute('stroke','none');r.setAttribute('opacity',.85);}});
+  const pg=(f-apDur-1.05)/0.9;
+  if(pg>0&&pg<1){SYN.psp.setAttribute('cx',(318+pg*200).toFixed(1));SYN.psp.setAttribute('cy',125);SYN.psp.setAttribute('rx',(10+8*w).toFixed(1));SYN.psp.setAttribute('opacity',((1-pg)*(0.35+0.65*w)).toFixed(2));}
+  else SYN.psp.setAttribute('opacity',0);
+}
+
+/* ================= Habit loop ================= */
+let loopTimers=[], loopShown=null;
+function renderLoop(id,force){
+  if(!force&&loopShown===id)return;
+  loopShown=id;
+  $('loopName').textContent='· '+ACTS[id].emoji+' '+ACTS[id].label;
+  $('loop').innerHTML=LOOPS[id].map(([r,txt],i)=>`<div class="ls" data-i="${i}" style="--c:${NODES[r].color}"><b>${i+1} · ${LOOP_NAMES[i]}</b><span class="rg" style="background:${NODES[r].color}"></span>${txt}</div>`).join('');
+}
+function playLoop(id,total){
+  loopTimers.forEach(clearTimeout); loopTimers=[];
+  renderLoop(id,true); drawDopa(id);
+  const els=[...$('loop').querySelectorAll('.ls')], per=total/4;
+  els.forEach(e=>e.style.setProperty('--d',per+'ms'));
+  els.forEach((e,i)=>loopTimers.push(setTimeout(()=>{els.forEach(x=>x.classList.remove('on'));e.classList.add('on');},i*per)));
+  loopTimers.push(setTimeout(()=>els.forEach(x=>x.classList.remove('on')),total+600));
+}
+function dopaHeights(id,A){
+  const cue=Math.min(1,A*1.05);
+  const rew=id==='scrollen'?Math.max(0.55,1-A):Math.max(0.08,1-A*0.95);
+  return [cue,rew];
+}
+function drawDopa(id){
+  const cv=$('dopa'), dpr=window.devicePixelRatio||1, W=cv.clientWidth, H=cv.clientHeight;
+  if(!W)return;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,W,H);
+  const L=10,R=10,T=14,B=26, X=f=>L+(W-L-R)*f, Y=v=>T+(H-T-B)*(1-v);
+  const curve=(hc,hr)=>f=>0.06+hc*Math.exp(-Math.pow((f-0.25)/0.045,2))+hr*Math.exp(-Math.pow((f-0.75)/0.045,2));
+  const A=S.habits[id].A, [c0,r0]=dopaHeights(id,0), [c1,r1]=dopaHeights(id,A);
+  const col=NODES.str.color;
+  c.strokeStyle='#423b34';c.beginPath();c.moveTo(L,Y(0.06));c.lineTo(W-R,Y(0.06));c.stroke();
+  c.setLineDash([5,5]);c.strokeStyle='#867869';c.lineWidth=1.5;c.beginPath();
+  const f0=curve(c0*0.85,r0*0.85);for(let i=0;i<=200;i++){const f=i/200;i?c.lineTo(X(f),Y(f0(f))):c.moveTo(X(f),Y(f0(f)));}c.stroke();c.setLineDash([]);
+  const f1=curve(c1*0.85,r1*0.85);
+  c.strokeStyle=col;c.lineWidth=2.5;c.beginPath();for(let i=0;i<=200;i++){const f=i/200;i?c.lineTo(X(f),Y(f1(f))):c.moveTo(X(f),Y(f1(f)));}c.stroke();
+  c.fillStyle=col+'33';c.lineTo(X(1),Y(0.06));c.lineTo(X(0),Y(0.06));c.fill();
+  c.font='11px Inter, sans-serif';c.fillStyle='#aea399';
+  c.fillText('CUE',X(0.25)-10,H-8);c.fillText('ROUTINE',X(0.5)-22,H-8);c.fillText('REWARD',X(0.75)-20,H-8);
+  c.fillStyle='#867869';c.fillText('- - day 1',X(0.86),T+2);c.fillStyle=col;c.fillText('— now',X(0.86),T+16);
+  const t=A<0.15?'Right now dopamine fires mostly at the <b>reward</b> – the brain is still surprised by it. There is no craving at the cue yet, so starting takes effort.'
+    :A<0.6?'The dopamine response is <b>moving from the reward to the cue</b>. The brain starts predicting the reward – the cue begins to pull you towards the routine.'
+    :'Dopamine now fires mainly at the <b>cue</b>. The cue alone creates craving and starts the routine – that’s a habit. ';
+  $('dopaText').innerHTML=t+(id==='scrollen'?' Scrolling is special: rewards are <b>unpredictable</b>, so the reward spike never fully fades – which keeps you swiping.':'');
+}
+function renderInfo(id){
+  const box=$('info');
+  if(!id){
+    box.innerHTML=`<h3>How to play</h3><ul>
+      <li style="--c:#4C8DFF;--i:1">🧠 Drag the neurons into the brain</li>
+      <li style="--c:#FFC93C;--i:2">👆 Pick an activity → wires grow</li>
+      <li style="--c:#B57BFF;--i:3">📱 Phone buzzes? Resist or give in</li>
+      <li style="--c:#3DDC97;--i:4">🌙 Sleep to lock it in</li>
+      <li style="--c:#FF5A5F;--i:5">🎯 3 good habits ≥80% + scrolling &lt;50%</li></ul>`;
+    return;
+  }
+  const a=ACTS[id],h=S.habits[id],col=NODES[a.main].color;
+  const pfc=Math.round((1-0.85*h.A)*100);
+  box.innerHTML=`<h3>${a.emoji} ${a.title}</h3><details class="more2"><summary>🧠 What happens in the brain?</summary><ul>${a.brain.map(([n,t],i)=>`<li style="--c:${NODES[n].color};--i:${i+1}">${t}</li>`).join('')}</ul></details>
+    <div class="chem">${a.chem.map(c=>`<span>🧪 ${c}</span>`).join('')}</div>
+    <div class="habitnote" style="--c:${col}"><b>Habit:</b> ${a.habit}</div>
+    <div class="control">Who’s in control right now?
+      <div class="bar"><i style="width:${pfc}%;background:#4C8DFF"></i><i style="width:${100-pfc}%;background:#FFC93C"></i></div>
+      <div class="ends"><span>🔵 PFC – conscious, effortful (${pfc}%)</span><span>Striatum – autopilot (${100-pfc}%) 🟡</span></div></div>`;
+}
+const chart=$('chart');
+function drawChart(){
+  const dpr=window.devicePixelRatio||1, W=chart.clientWidth, H=chart.clientHeight;
+  if(!W)return;
+  chart.width=W*dpr; chart.height=H*dpr;
+  const c=chart.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,W,H);
+  const L=36,R=12,T=12,B=26, maxD=GOAL_DAY;
+  const X=d=>L+(W-L-R)*d/maxD, Y=v=>T+(H-T-B)*(1-v);
+  c.font='11px Inter, sans-serif'; c.fillStyle='#aea399'; c.strokeStyle='#38322c'; c.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(v=>{c.beginPath();c.moveTo(L,Y(v));c.lineTo(W-R,Y(v));c.stroke();c.fillText(Math.round(v*100)+'%',4,Y(v)+4);});
+  for(let d=0;d<=maxD;d+=20){c.fillText(d,X(d)-4,H-8);}
+  c.setLineDash([4,4]); c.strokeStyle='#867869';
+  c.beginPath();c.moveTo(X(66),T);c.lineTo(X(66),H-B);c.stroke();
+  c.beginPath();c.moveTo(L,Y(WIN_A));c.lineTo(W-R,Y(WIN_A));c.stroke();
+  c.strokeStyle='#6b2c3a';c.beginPath();c.moveTo(L,Y(SCROLL_MAX));c.lineTo(W-R,Y(SCROLL_MAX));c.stroke();
+  c.setLineDash([]); c.fillStyle='#aea399';
+  c.fillText('avg. 66 days',X(66)+4,T+10);
+  c.fillText('Habit formed (80%)',L+4,Y(WIN_A)-4);
+  c.fillStyle='#c46a7a';c.fillText('Scroll limit (50%)',L+4,Y(SCROLL_MAX)-4);
+  c.fillStyle='#ffffff22'; c.fillRect(X(S.day-1),T,Math.max(2,X(1)-X(0)),H-T-B);
+  ACT_IDS.forEach(id=>{
+    const h=S.habits[id], pts=h.hist.slice(0,GOAL_DAY);
+    if(pts.length<=1 && h.A===0)return;
+    if(!S.ended)pts[S.day-1]=h.A;
+    c.strokeStyle=NODES[ACTS[id].main].color; c.lineWidth=2.5; c.beginPath();
+    pts.forEach((v,d)=>{d?c.lineTo(X(d),Y(v)):c.moveTo(X(d),Y(v));});
+    c.stroke();
+    const ld=pts.length-1; c.fillStyle=c.strokeStyle;
+    c.beginPath();c.arc(X(ld),Y(pts[ld]),3.5,0,7);c.fill();
+    c.fillText(ACTS[id].emoji,Math.min(X(ld)+6,W-R-14),Y(pts[ld])+4);
+  });
+}
+function renderAll(){
+  renderHud();renderGoals();renderActs();renderTable();drawChart();renderMatrix();renderSyn();
+  renderLoop(S.current||'scrollen');drawDopa(S.current||'scrollen');
+  $('phoneAway').textContent=S.phoneAway?'📵 Phone is in another room today':'📵 Put phone in another room (−4⚡)';
+}
+
+/* ================= Quiz ================= */
+const QUIZ=[
+  ['Why do the connections get thicker when you repeat an activity?',['Neurons that fire together wire together – synapses get more efficient (LTP)','The brain grows new regions','Blood flow permanently doubles'],0,'Repeated co-activation strengthens synapses: long-term potentiation.'],
+  ['On average, how long did it take for a new behavior to become automatic in the Lally study?',['21 days','66 days','1 year'],1,'Median 66 days – with a huge range from 18 to 254 days.'],
+  ['Why does scrolling become a habit so fast?',['It is very healthy','Instant, unpredictable rewards + almost no PFC effort','It uses the most neurons'],1,'Variable rewards give strong dopamine signals, and the loop needs almost no conscious control.'],
+  ['Which region takes over once a behavior is automatic?',['Prefrontal cortex','Striatum / basal ganglia','Amygdala'],1,'Control shifts from the effortful PFC to the striatum – the autopilot.'],
+  ['What does the brain do with the day’s learning during sleep?',['It replays the activity patterns and consolidates them','Nothing – the brain switches off','It deletes everything new'],0,'Hippocampal replay during sleep helps move new memories into long-term storage.'],
+  ['What is a connectome?',['A complete wiring diagram of which neurons connect to which','A single very large neuron','A brain scan of blood flow'],0,'A connectome maps every connection – like the fruit fly’s 139,255 neurons and 54.5 million synapses (FlyWire, 2024).'],
+  ['Once a habit is formed, when do dopamine neurons fire most?',['At the reward','At the cue that predicts the reward','Never again'],1,'The dopamine response shifts from the reward to the predictive cue – so the cue alone creates craving.'],
+  ['Why does myelin make signals faster?',['The signal jumps between gaps (nodes of Ranvier)','It adds more neurons','It makes the axon shorter'],0,'Myelin insulates the axon, so the action potential jumps from node to node – saltatory conduction.'],
+  ['What triggers vesicles to release neurotransmitter?',['Calcium flowing into the terminal','Oxygen from the blood','The receptors pulling them across'],0,'The arriving spike opens Ca²⁺ channels; calcium triggers vesicle fusion.'],
+  ['Which strategy fights a bad habit with the least willpower?',['Resisting every urge harder','Adding friction – e.g. phone in another room','Doing it more often'],1,'Environment design removes the cue, so the urge doesn’t even start.'],
+  ['You missed your run yesterday. What matters most now?',['Nothing, the habit is gone','Don’t miss today too – never miss twice','Run twice as long'],1,'One missed day barely matters (Lally et al.). Missing repeatedly is what breaks the chain.'],
+  ['Why are relapses into old habits so easy?',['Old paths are deleted instantly','Old connections weaken but don’t fully disappear','Habits are genetic'],1,'Unused paths weaken, but a trace stays – one trigger can reactivate it.']
+];
+let qScore=0,qi=0,qAns=null;
+function renderQuiz(){
+  const box=$('quiz');
+  if(qi>=QUIZ.length){
+    if(qScore===QUIZ.length&&!quizPerfect){quizPerfect=true;renderBadges();save();}
+    box.innerHTML=`<div class="q qcard" style="text-align:center"><div style="font-size:44px">${qScore===QUIZ.length?'🧠':qScore>=9?'🔥':qScore>=6?'💪':'🌱'}</div><h3 style="font-size:20px">${qScore}/${QUIZ.length} correct</h3><p class="sub">${qScore===QUIZ.length?'Perfect!':'Your brain just practiced – try again to strengthen it.'}</p><button class="primary" id="qAgain" style="width:auto;display:inline-block">↻ Try again</button></div>`;
+    $('qAgain').onclick=()=>{qScore=0;qi=0;qAns=null;$('score').textContent='';renderQuiz();};return;
+  }
+  const q=QUIZ[qi];
+  box.innerHTML=`<div class="q qcard"><div class="qprog"><i style="width:${qi/QUIZ.length*100}%"></i></div><div class="qnum">Question ${qi+1} / ${QUIZ.length}</div><h3>${q[0]}</h3>${q[1].map((o,j)=>`<button data-o="${j}">${o}</button>`).join('')}<div class="fb"></div></div>`;
+  const qe=box.querySelector('.q');
+  qe.querySelectorAll('button[data-o]').forEach(b=>b.onclick=()=>{
+    if(qAns!==null)return; qAns=+b.dataset.o;
+    const right=qAns===q[2]; if(right)qScore++;
+    b.classList.add(right?'right':'wrong'); qe.querySelectorAll('button[data-o]')[q[2]].classList.add('right');
+    qe.querySelector('.fb').innerHTML=`<b>${right?'✅ Correct!':'❌ Not quite.'}</b> ${q[3]}<br><button class="primary qnext">${qi===QUIZ.length-1?'See result 🏁':'Next →'}</button>`;
+    qe.querySelector('.qnext').onclick=()=>{qi++;qAns=null;renderQuiz();};
+    $('score').textContent=`– ${qScore}/${qi+1}`;
+  });
+}
+
+/* ================= Toast & wiring ================= */
+let tT;
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),4500);}
+
+$('placeAll').onclick=()=>{
+  const missing=ORDER.filter(id=>!S.placed[id]);
+  if(!missing.length){toast('All neurons are already in the brain.');return;}
+  missing.forEach((id,i)=>setTimeout(()=>{S.placed[id]=true;S.pos[id]={...HOME[id]};ripple(id);S.glow[id]=1;renderActs();},i*140));
+  setTimeout(()=>toast('All 5 neurons are in the brain. Now pick an activity!'),missing.length*140);
+};
+$('resetBtn').onclick=()=>{closeModal();restart();};
+$('nextDay').onclick=nextDay;
+$('phoneAway').onclick=()=>{
+  if(S.phoneAway||S.busy||S.modal)return;
+  if(S.energy<4){toast('😮‍💨 Not even 4 energy left to walk the phone to another room. Do it earlier in the day next time.');return;}
+  S.energy-=4;S.phoneAway=true;toast('📵 Phone is in another room. Urges today are much less likely – friction beats willpower.');renderAll();
+};
+$('ff7').onclick=()=>fastForward(7);
+$('ff30').onclick=()=>fastForward(30);
+let rzT;window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{drawChart();drawDopa(S.current||'scrollen');},120);});
+
+/* hooks: scroll reveal, typewriter, count-up, caption flash */
+document.querySelectorAll('.steps .step,.quiz .q,.scale .sc').forEach(e=>{const sib=[...e.parentNode.children];e.style.setProperty('--i',sib.indexOf(e));});
+const countUp=el=>{const end=+el.dataset.count,t0=performance.now(),d=1400;const st=n=>{const f=Math.min(1,(n-t0)/d),v=Math.round(end*(1-Math.pow(1-f,3)));el.textContent=v.toLocaleString('en-US');if(f<1)requestAnimationFrame(st);};requestAnimationFrame(st);};
+if('IntersectionObserver' in window&&!RM){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');e.target.querySelectorAll('[data-count]').forEach(countUp);io.unobserve(e.target);}}),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(e=>io.observe(e));
+} else document.querySelectorAll('.reveal').forEach(e=>e.classList.add('in'));
+(function typer(){const words=['scroll','run','learn a new word','meditate','laugh with friends','resist an urge'];const tw=$('tw');if(RM)return;let wi=0,ci=words[0].length,del=true;
+  const tick=()=>{const w=words[wi];if(del){ci--;if(ci<=0){del=false;wi=(wi+1)%words.length;}}else{ci++;if(ci>=words[wi].length){del=true;tw.textContent=words[wi];return setTimeout(tick,1800);}}tw.textContent=words[wi].slice(0,Math.max(0,ci));setTimeout(tick,del?45:85);};
+  setTimeout(tick,1800);})();
+new MutationObserver(()=>{const c=$('caption');c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');}).observe($('caption'),{childList:true,characterData:true,subtree:true});
+
+(function flashcards(){
+  const wrap=document.querySelector('.steps'), cards=[...wrap.querySelectorAll('.step')];
+  const nav=document.createElement('div'); nav.className='stepnav';
+  nav.innerHTML='<button id="scPrev">← Prev</button><span id="scCount"></span><button id="scNext" class="primary">Next →</button><button id="scClose">✕ Show all</button>';
+  wrap.after(nav);
+  let cur=-1;
+  const show=(i,dir)=>{
+    cur=(i+cards.length)%cards.length;
+    cards.forEach(c=>c.classList.remove('open','fromL','fromR'));
+    wrap.classList.add('focus'); nav.classList.add('on');
+    const c=cards[cur]; void c.offsetWidth; c.classList.add('open',dir<0?'fromL':'fromR');
+    $('scCount').innerHTML=`<b>${cur+1}</b> / ${cards.length}<span class="dots">${cards.map((_,j)=>`<i class="${j===cur?'on':j<cur?'seen':''}"></i>`).join('')}</span>`;
+    const r=wrap.getBoundingClientRect(); if(r.top<0||r.top>innerHeight*0.6) wrap.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+  };
+  const close=()=>{const was=cards[cur];cur=-1;cards.forEach(c=>c.classList.remove('open','fromL','fromR'));wrap.classList.remove('focus');nav.classList.remove('on');if(was)was.scrollIntoView({block:'center'});};
+  cards.forEach((c,i)=>c.addEventListener('click',()=>{if(cur!==i)show(i,1);}));
+  $('scPrev').onclick=()=>show(cur-1,-1); $('scNext').onclick=()=>show(cur+1,1); $('scClose').onclick=close;
+  document.addEventListener('keydown',e=>{if(cur<0||S.modal)return;if(e.key==='ArrowRight')show(cur+1,1);else if(e.key==='ArrowLeft')show(cur-1,-1);else if(e.key==='Escape')close();});
+  let tx=null; wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+  wrap.addEventListener('touchend',e=>{if(cur<0||tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)show(cur+(dx<0?1:-1),dx<0?1:-1);tx=null;});
+})();
+
+/* ===== extras: nav, autosave, badges, sound, habit plan ===== */
+const navEl=$('topnav'), secIds=['sec-play','sec-loop','sec-map','sec-science','sec-plan','sec-quiz'];
+navEl.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>$(b.dataset.go).scrollIntoView({behavior:RM?'auto':'smooth',block:'start'}));
+document.querySelectorAll('section[id^="sec-"]').forEach(x=>x.style.scrollMarginTop='60px');
+function onScroll(){
+  const y=scrollY, max=document.documentElement.scrollHeight-innerHeight;
+  navEl.classList.toggle('on',y>260);
+  $('scrollBar').style.width=(max>0?y/max*100:0)+'%';
+  let cur=null; secIds.forEach(id=>{const r=$(id).getBoundingClientRect();if(r.top<innerHeight*0.4)cur=id;});
+  navEl.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('cur',b.dataset.go===cur));
+}
+addEventListener('scroll',onScroll,{passive:true});
+
+// sound (off by default, tiny synth blips)
+let snd=false, actx=null;
+function beep(f=520,d=.08,type='sine',v=.05){if(!snd)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+d);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+d);}catch(e){}}
+$('sndBtn').onclick=()=>{snd=!snd;$('sndBtn').textContent=snd?'🔊':'🔇';beep(660,.12);save();};
+
+// badges
+const BADGES=[
+  ['brain','🧠','Brain builder',()=>allPlaced()],
+  ['rep','🌱','First rep',()=>GOOD.some(id=>S.habits[id].reps>0)],
+  ['sleep','😴','Slept on it',()=>S.day>=2],
+  ['urge','💪','Urge surfer (5×)',()=>S.resisted>=5],
+  ['streak','🔥','7-day streak',()=>GOOD.some(id=>S.habits[id].streak>=7)],
+  ['friction','📵','Friction fan',()=>S.phoneAwayCount>=3],
+  ['auto','🤖','First autopilot',()=>formed().length>=1],
+  ['win','🏆','Rewired',()=>S.won],
+  ['quiz','🧩','Quiz master',()=>quizPerfect],
+];
+let got=new Set(), quizPerfect=false;
+function renderBadges(){
+  let fresh=[];
+  BADGES.forEach(([id,,,ok])=>{if(!got.has(id)&&ok()){got.add(id);fresh.push(id);}});
+  $('badges').innerHTML='<span class="gt" style="font-family:Space Grotesk;font-weight:700;font-size:14px;align-self:center">🏅 '+got.size+'/'+BADGES.length+'</span>'+BADGES.map(([id,e,n])=>`<span class="bdg ${got.has(id)?'got':''} ${fresh.includes(id)?'new':''}"><span class="e">${e}</span>${n}</span>`).join('');
+  if(fresh.length){const b=BADGES.find(x=>x[0]===fresh[0]);const t=$('toast');setTimeout(()=>{toast(`🏅 Badge unlocked: ${b[1]} ${b[2]}`);t.classList.add('badge');setTimeout(()=>t.classList.remove('badge'),4600);},300);beep(784,.1,'triangle');setTimeout(()=>beep(1046,.18,'triangle'),110);}
+}
+
+// autosave
+const KEY='neuroplasticity-save-v1';
+let saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{if(S.busy)return;const o={...S,usedToday:[...S.usedToday],busy:false,modal:false,sleep:null};localStorage.setItem(KEY,JSON.stringify({S:o,got:[...got],quizPerfect,snd}));}catch(e){}},400);}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d||!d.S)return false;
+    const f=fresh(); S=Object.assign(f,d.S,{usedToday:new Set(d.S.usedToday||[]),busy:false,modal:false,sleep:null});
+    got=new Set(d.got||[]);quizPerfect=!!d.quizPerfect;snd=!!d.snd;$('sndBtn').textContent=snd?'🔊':'🔇';return true;}catch(e){return false;}
+}
+const _renderAll=renderAll;
+renderAll=function(){_renderAll();renderBadges();$('tnDay').textContent=`Day ${S.day}/${GOAL_DAY} · ⚡${S.energy}`;save();};
+const _restart=restart;
+restart=function(){try{localStorage.removeItem(KEY);}catch(e){}_restart();};
+
+// count phone-away uses + sounds on key moments
+$('phoneAway').addEventListener('click',()=>{if(S.phoneAway){S.phoneAwayCount=(S.phoneAwayCount||0)+1;renderAll();}});
+document.addEventListener('click',e=>{const b=e.target.closest('.act');if(b&&!b.disabled)beep(440,.07);if(e.target.closest('#nextDay'))beep(330,.25,'sine',.04);});
+
+// habit plan
+function renderPlan(){
+  const sel=$('pHabit'), custom=sel.value==='__';
+  $('pCustom').style.display=custom?'':'none';
+  const habit=(custom?$('pCustom').value:sel.value)||'my new habit';
+  const tiny=$('pTiny').value||'a tiny version', cue=$('pCue').value||'…', rew=$('pRew').value||'a small reward';
+  $('pCard').innerHTML=`<div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#f08a4b;font-weight:700">My habit plan</div>
+    <div class="big pulse">After I <u>${esc(cue)}</u>,<br>I will <u>${esc(tiny)}</u> <span style="color:#aea399;font-size:.7em">(${esc(habit)})</span>.<br>Then: <u>${esc(rew)}</u> 🎉</div>
+    <div class="tips"><span>🤏 tiny beats big</span><span>🔗 same cue daily</span><span>❌❌ never miss twice</span><span>📅 ~66 days</span></div>
+    <div><button class="primary" id="pCopy">📋 Copy my plan</button></div>`;
+  $('pCopy').onclick=async()=>{const t=`After I ${cue}, I will ${tiny} (${habit}). Then: ${rew}.`;try{await navigator.clipboard.writeText(t);toast('📋 Copied! Put it somewhere you see every day.');}catch(e){toast('Copy didn’t work here – just screenshot the card 📸');}};
+}
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TINY={'meditate':'breathe for 1 minute','go for a run':'put on my running shoes','learn 5 new words':'learn 1 word','text a friend':'send one message','read':'read 1 page'};
+$('pHabit').onchange=()=>{if(TINY[$('pHabit').value])$('pTiny').value=TINY[$('pHabit').value];renderPlan();};
+['pCustom','pTiny','pCue','pRew'].forEach(id=>$(id).oninput=renderPlan);
+renderPlan();
+
+const loaded=load();
+buildEdges();buildNodes();renderLegend();setPose(null);renderInfo(null);renderAll();renderQuiz();onScroll();
+if(loaded&&(S.day>1||allPlaced()))setTimeout(()=>toast(`👋 Welcome back! Continuing at day ${S.day}. (Restart = new game)`),600);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{drawChart();drawDopa(S.current||'scrollen');});
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
