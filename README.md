@@ -2,8 +2,7 @@
 
 **An interactive game that shows how habits physically rewire your brain.**
 
-👉 **Play it here:** https://YOUR-USERNAME.github.io/neuroplasticity-game/
-
+👉 **Play it here:** https://arianagirins.github.io/neuroplasticity-game/
 ---
 
 ## What is this?
